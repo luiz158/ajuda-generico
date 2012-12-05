@@ -18,4 +18,7 @@ import java.lang.annotation.Target;
 @Target(ElementType.FIELD)
 public @interface CampoBD {
     public String nome() default "";
+    public boolean obrigatorio() default false;
+    public String mensagem() default "";
+    public String nomeImpCampo() default "";
 }

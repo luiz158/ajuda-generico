@@ -19,7 +19,7 @@ public class ConnectionDB {
     private static Connection connection;
     private final static String username = "SA";
     private final static String password = "";
-    private final static String url = "jdbc:hsqldb:file:/home/jacob/BasesDeDados/HSQLDB/ajuda_generico";
+    private final static String url = "jdbc:hsqldb:file:C:/BaseDeDados/ajuda-generico/ajuda_generico";
     private final static String driver = "org.hsqldb.jdbcDriver";
     private static final Logger log = Logger.getLogger(ConnectionDB.class.getName());
 

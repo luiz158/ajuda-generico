@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2012 jacob
+ *  Copyright (C) 2012 jacoboliveira
  * 
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -14,19 +14,31 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package br.ajuda.generico.jdbc;
 
-import br.ajuda.generico.dao.ITemaDao;
-import br.ajuda.generico.dao.TemaDao;
+package testes;
+
+import br.ajuda.generico.control.ControladorDespacho;
+import br.ajuda.generico.jdbc.annotation.ManagerAnnotationEntities;
 
 /**
- * 
- * @author jacob
+ *
+ * @author jacoboliveira
  */
-public class DaoFactoryImpl extends DaoFactory {
+public class TestAnnotation {
 
-    @Override
-    public ITemaDao getTemaDao() throws Exception {       
-        return TemaDao.getTemaDao();
+    /**
+     * @param args the command line arguments
+     */
+    public static void main(String[] args) {
+        ControladorDespacho c =new ControladorDespacho();
+        ManagerAnnotationEntities m =new ManagerAnnotationEntities();
+        TestBean testBean = new TestBean();
+        try {
+            m.analisarCamposObrig(testBean);
+        } catch (Exception ex) {
+            c.registraEexibe(ex);
+        }
+        System.exit(0);
     }
+
 }

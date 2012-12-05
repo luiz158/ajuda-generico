@@ -16,6 +16,9 @@ public abstract class DaoFactory {
 
     public abstract ITemaDao getTemaDao() throws Exception;
 
+    public static DaoFactory getDaoFactory(){
+        return new DaoFactoryImpl();
+    }
 //    public static DaoFactory getDaoFactory(boolean b, int escolhaFabrica) throws Exception {
 //
 //        switch (escolhaFabrica) {

@@ -17,13 +17,15 @@
 package br.ajuda.generico.control;
 
 import br.ajuda.generico.exceptions.MensagensException;
+import br.ajuda.generico.jdbc.annotation.CampoDto;
+import br.ajuda.generico.jdbc.annotation.CampoObrigException;
 import br.ajuda.generico.util.JMessageUtil;
 import br.ajuda.generico.util.LogSis;
+import java.awt.Window;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Level;
 
 /**
  *
@@ -112,7 +114,7 @@ public class ControladorDespacho {
         }
     }
 
-    public Object getParam(String key){
+    public Object getParam(String key) {
         return paramSis.get(key);
     }
 
@@ -129,6 +131,14 @@ public class ControladorDespacho {
 
     public void despachar(Visao visao) {
         visao.setControladorDespacho(this);
+        final Window w = (Window) visao;
+        java.awt.EventQueue.invokeLater(new Runnable() {
+
+            @Override
+            public void run() {
+                w.setVisible(true);
+            }
+        });
     }
 
     /**
@@ -141,12 +151,23 @@ public class ControladorDespacho {
             MensagensException msgEx = (MensagensException) ex;
             List<MensagemLogSistema> msgs = msgEx.getMensagens();
             StringBuilder s = new StringBuilder();
-            for (MensagemLogSistema msgSis : msgs) {                
-                logSis.log(msgSis.getLevel(),msgSis.getMsg(),msgEx);                
+            for (MensagemLogSistema msgSis : msgs) {
+                logSis.log(msgSis.getLevel(), msgSis.getMsg(), msgEx);
                 s.append("-> Mensagem: ").append(msgSis.getMsg()).append("\n").append(logSis.getPrintStackTrace(msgEx.getClass().getName())).append("\n");
             }
-            
+
             JMessageUtil.showMensagensSistema(new javax.swing.JFrame(), s.toString());
+        } else if (ex instanceof CampoObrigException) {
+            CampoObrigException campoObrigEx = (CampoObrigException) ex;
+            StringBuilder s = new StringBuilder();
+            List<CampoDto> campos = campoObrigEx.getList();
+            for (CampoDto campoDto : campos) {
+                s.append("->").append(campoDto.getMensagem()).append("\n");
+            }
+            JMessageUtil.showMensagensSistema(new javax.swing.JFrame(), s.toString());
+        } else {
+            logSis.erro(ex.getMessage(), ex);
+            JMessageUtil.showMensagensSistema(new javax.swing.JFrame(), ex.getMessage());
         }
     }
 }

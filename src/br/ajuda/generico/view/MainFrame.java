@@ -11,15 +11,19 @@
 
 package br.ajuda.generico.view;
 
+import br.ajuda.generico.jdbc.DaoFactory;
+import br.ajuda.generico.util.AbstractFrame;
+
 /**
  *
  * @author jacob
  */
-public class MainFrame extends javax.swing.JFrame {
-
+public class MainFrame extends AbstractFrame{
+    private DaoFactory daoFactory;
     /** Creates new form MainFrame */
     public MainFrame() {
         initComponents();
+        daoFactory = DaoFactory.getDaoFactory();
     }
 
     /** This method is called from within the constructor to
@@ -35,6 +39,10 @@ public class MainFrame extends javax.swing.JFrame {
         jPanel1 = new javax.swing.JPanel();
         adicTemaList = new br.com.swing.componentes.personalizados.ui.ListaComFiltro();
         listaComFiltro2 = new br.com.swing.componentes.personalizados.ui.ListaComFiltro();
+        jPanel4 = new javax.swing.JPanel();
+        adicTemaButton = new javax.swing.JButton();
+        jButton2 = new javax.swing.JButton();
+        jButton3 = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         editorPanel = new javax.swing.JEditorPane();
@@ -57,25 +65,65 @@ public class MainFrame extends javax.swing.JFrame {
 
         listaComFiltro2.setName("listaComFiltro2"); // NOI18N
 
+        jPanel4.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        jPanel4.setName("jPanel4"); // NOI18N
+
+        adicTemaButton.setText("AD");
+        adicTemaButton.setName("adicTemaButton"); // NOI18N
+        adicTemaButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                adicTemaButtonActionPerformed(evt);
+            }
+        });
+
+        jButton2.setText("ALT");
+        jButton2.setName("jButton2"); // NOI18N
+
+        jButton3.setText("EXC");
+        jButton3.setName("jButton3"); // NOI18N
+
+        javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
+        jPanel4.setLayout(jPanel4Layout);
+        jPanel4Layout.setHorizontalGroup(
+            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel4Layout.createSequentialGroup()
+                .addComponent(adicTemaButton)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jButton2)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jButton3)
+                .addContainerGap(56, Short.MAX_VALUE))
+        );
+        jPanel4Layout.setVerticalGroup(
+            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addComponent(adicTemaButton)
+                .addComponent(jButton2)
+                .addComponent(jButton3))
+        );
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(listaComFiltro2, javax.swing.GroupLayout.PREFERRED_SIZE, 213, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(adicTemaList, javax.swing.GroupLayout.PREFERRED_SIZE, 213, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(25, Short.MAX_VALUE))
+                    .addComponent(adicTemaList, javax.swing.GroupLayout.DEFAULT_SIZE, 223, Short.MAX_VALUE)
+                    .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(16, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(51, 51, 51)
+                .addGap(24, 24, 24)
+                .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(adicTemaList, javax.swing.GroupLayout.PREFERRED_SIZE, 143, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(68, 68, 68)
+                .addGap(72, 72, 72)
                 .addComponent(listaComFiltro2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(28, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         jSplitPane1.setLeftComponent(jPanel1);
@@ -85,7 +133,6 @@ public class MainFrame extends javax.swing.JFrame {
 
         jScrollPane1.setName("jScrollPane1"); // NOI18N
 
-        editorPanel.setBackground(java.awt.Color.white);
         editorPanel.setName("editorPanel"); // NOI18N
         jScrollPane1.setViewportView(editorPanel);
 
@@ -129,11 +176,17 @@ public class MainFrame extends javax.swing.JFrame {
         setBounds((screenSize.width-742)/2, (screenSize.height-516)/2, 742, 516);
     }// </editor-fold>//GEN-END:initComponents
 
+    private void adicTemaButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_adicTemaButtonActionPerformed
+        
+        
+    }//GEN-LAST:event_adicTemaButtonActionPerformed
+
     /**
     * @param args the command line arguments
     */
     public static void main(String args[]) {
         java.awt.EventQueue.invokeLater(new Runnable() {
+            @Override
             public void run() {
                 new MainFrame().setVisible(true);
             }
@@ -141,9 +194,12 @@ public class MainFrame extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton adicTemaButton;
     private br.com.swing.componentes.personalizados.ui.ListaComFiltro adicTemaList;
     private javax.swing.JToggleButton editarTButton;
     private javax.swing.JEditorPane editorPanel;
+    private javax.swing.JButton jButton2;
+    private javax.swing.JButton jButton3;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
@@ -151,6 +207,7 @@ public class MainFrame extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
+    private javax.swing.JPanel jPanel4;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JSplitPane jSplitPane1;
     private org.jdesktop.swingx.JXStatusBar jXStatusBar1;

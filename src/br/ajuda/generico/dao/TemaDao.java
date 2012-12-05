@@ -14,7 +14,6 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 package br.ajuda.generico.dao;
 
 import br.ajuda.generico.entities.Tema;
@@ -24,12 +23,18 @@ import br.ajuda.generico.jdbc.HsqldbDaoFactory;
  * 
  * @author jacob
  */
-public class TemaDao extends HsqldbDaoFactory<Tema> implements ITemaDao{
+public class TemaDao extends HsqldbDaoFactory<Tema> implements ITemaDao {
+
+    private static ITemaDao temaDao;
 
     public TemaDao() throws Exception {
         super();
     }
 
-
-    
+    public static ITemaDao getTemaDao() throws Exception {
+        if (temaDao == null) {
+            temaDao = new TemaDao();
+        }
+        return temaDao;
+    }
 }
