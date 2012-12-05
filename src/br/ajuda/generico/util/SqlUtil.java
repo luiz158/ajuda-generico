@@ -21,6 +21,9 @@ public class SqlUtil {
     }
 
     public static String getNameAttributeBean(String colName){
+        if(StringHelper.isBlank(colName)){
+            throw new NullPointerException("coluna do banco nula ou em branco para retirar o underline.");
+        }
         colName = colName.toLowerCase();
         if(colName.indexOf("_")==-1){
             return colName;

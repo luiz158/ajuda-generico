@@ -18,8 +18,9 @@ import java.util.Date;
  */
 @Tabela(nome="ag_tema",schema="public")
 public class Tema implements Serializable {
+
     @Transitorio
-    private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = -8249014547569069393L;
     @Id
     @CampoBD(nome="id_tema")
     private Long idTema;
