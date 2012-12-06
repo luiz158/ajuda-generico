@@ -24,7 +24,7 @@ public class Tema implements Serializable {
     @Id
     @CampoBD(nome="id_tema")
     private Long idTema;
-    @CampoBD(nome="titulo_tema")
+    @CampoBD(nome="titulo_tema",obrigatorio=true,mensagem="Preencha o campo Titulo!")
     private String tituloTema;
     @CampoBD(nome="descricao_tema")
     private String descricaoTema;
@@ -94,7 +94,6 @@ public class Tema implements Serializable {
 
     @Override
     public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
         if (!(object instanceof Tema)) {
             return false;
         }

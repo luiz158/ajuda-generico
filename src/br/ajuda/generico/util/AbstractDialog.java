@@ -18,6 +18,7 @@ import java.util.logging.Logger;
  * @author jacoboliveira
  */
 public class AbstractDialog extends javax.swing.JDialog implements Visao{
+    private static final long serialVersionUID = 4436597960584755195L;
 
     protected LogSis logSis;
     protected ControladorDespacho controladorDespacho;

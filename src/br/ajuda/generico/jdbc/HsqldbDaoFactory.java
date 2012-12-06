@@ -135,6 +135,7 @@ public class HsqldbDaoFactory<T> implements GenericDao<T> {
 
     @Override
     public void savePrepare(T bean) throws Exception {
+        managerAnnotationEntities.analisarCamposObrig(bean);
 
         String sql = (new StringBuilder()).append("INSERT INTO ").append(managerAnnotationEntities.getNomeTabela(bean)).append(" (").toString();
 
@@ -257,6 +258,8 @@ public class HsqldbDaoFactory<T> implements GenericDao<T> {
 
     @Override
     public void savePrepare(T bean, String sql, String[] camposExtras, String... excluirCampos) throws Exception {
+        managerAnnotationEntities.analisarCamposObrig(bean);
+
         cps = getConnection().prepareStatement(sql);
 
         IMapa beanMap = BeanHelper.parseIMapa(bean);
@@ -306,7 +309,9 @@ public class HsqldbDaoFactory<T> implements GenericDao<T> {
 
     @Override
     public void updatePrepare(T bean) throws Exception {
-        //TODO metodo update nao esta atualizando
+
+        managerAnnotationEntities.analisarCamposObrig(bean);
+
         String sql = (new StringBuilder()).append("UPDATE ").append(managerAnnotationEntities.getNomeTabela(bean)).append(" SET ").toString();
 
         //obtenho os campos sem os ids da entidade mapeada
@@ -381,6 +386,8 @@ public class HsqldbDaoFactory<T> implements GenericDao<T> {
 
     @Override
     public void updatePrepare(Object bean, String sql, String[] camposExtras, String... excluirCampos) throws Exception {
+        managerAnnotationEntities.analisarCamposObrig(bean);
+
         cps = getConnection().prepareStatement(sql);
 
         IMapa<String, Object> beanMap = BeanHelper.parseIMapa(bean, excluirCampos);

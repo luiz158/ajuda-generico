@@ -40,6 +40,20 @@ public class NumberHelper extends NumberUtils {
         return new Long(toLong(source, 0L));
     }
 
+    public static Short formatShort(String source) {
+        if (StringHelper.isBlank(source)) {
+            return new Short((short)0);
+        }
+        return new Short(Short.parseShort(source));
+    }
+
+    public static Integer formatInteger(String source) {
+        if (StringHelper.isBlank(source)) {
+            return new Integer(0);
+        }
+        return new Integer(toInt(source, 0));
+    }
+
     public static DecimalFormat newDecimalFormatCustom() {
         return new DecimalFormat("#,##0.00", new DecimalFormatSymbols(locale));
     }

@@ -4,15 +4,6 @@
  */
 package testes;
 
-import br.ajuda.generico.entities.Tema;
-import br.ajuda.generico.jdbc.ConnectionDB;
-import br.ajuda.generico.jdbc.DaoFactory;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.Statement;
-import java.util.Date;
-
 /**
  *
  * @author jacob
@@ -23,7 +14,7 @@ public class TesteHSQLDB {
      * @param args the command line arguments
      */
     public static void main(String[] args) throws Exception {
-//        // TODO code application logic here
+
 //        Class.forName("org.hsqldb.jdbcDriver");
 //        Connection conn = DriverManager.getConnection("jdbc:hsqldb:file:/home/jacob/BasesDeDados/HSQLDB/ajuda_generico");
 //        conn.setAutoCommit(false);

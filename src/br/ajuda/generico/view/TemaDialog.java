@@ -26,8 +26,7 @@ package br.ajuda.generico.view;
 import br.ajuda.generico.dao.ITemaDao;
 import br.ajuda.generico.jdbc.DaoFactory;
 import br.ajuda.generico.util.AbstractDialog;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.awt.Component;
 
 /**
  *
@@ -40,6 +39,7 @@ public class TemaDialog extends AbstractDialog{
         super(parent, modal);
         initComponents();
         daoFactory = DaoFactory.getDaoFactory();
+       
     }
 
     /** This method is called from within the constructor to
@@ -51,17 +51,18 @@ public class TemaDialog extends AbstractDialog{
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
         java.awt.GridBagConstraints gridBagConstraints;
+        bindingGroup = new org.jdesktop.beansbinding.BindingGroup();
 
         jPanel2 = new javax.swing.JPanel();
-        campoPanel1 = new br.com.swing.componentes.personalizados.ui.CampoPanel();
+        tituloTField = new br.com.swing.componentes.personalizados.ui.CampoPanel();
         jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTextArea1 = new javax.swing.JTextArea();
+        descTArea = new javax.swing.JTextArea();
         jSeparator1 = new javax.swing.JSeparator();
         jPanel3 = new javax.swing.JPanel();
-        jButton2 = new javax.swing.JButton();
-        jButton1 = new javax.swing.JButton();
+        cancelButton = new javax.swing.JButton();
+        adicButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -69,27 +70,32 @@ public class TemaDialog extends AbstractDialog{
         jPanel2.setName("jPanel2"); // NOI18N
         jPanel2.setLayout(new java.awt.GridBagLayout());
 
-        campoPanel1.setAlterarDimensaoLabel(new java.awt.Dimension(58, 14));
-        campoPanel1.setLabelText("Titulo: ");
-        campoPanel1.setName("campoPanel1"); // NOI18N
+        tituloTField.setAlterarDimensaoLabel(new java.awt.Dimension(58, 14));
+        tituloTField.setLabelText("Titulo: ");
+        tituloTField.setName("tituloTField"); // NOI18N
+        tituloTField.setNomeCampo("tituloTema");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.ipadx = 293;
-        jPanel2.add(campoPanel1, gridBagConstraints);
+        jPanel2.add(tituloTField, gridBagConstraints);
 
         jPanel1.setName("jPanel1"); // NOI18N
         jPanel1.setLayout(new javax.swing.BoxLayout(jPanel1, javax.swing.BoxLayout.LINE_AXIS));
 
-        jLabel1.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        jLabel1.setFont(new java.awt.Font("Tahoma", 1, 11));
         jLabel1.setText("Descrição:");
         jLabel1.setName("jLabel1"); // NOI18N
         jPanel1.add(jLabel1);
 
         jScrollPane1.setName("jScrollPane1"); // NOI18N
 
-        jTextArea1.setColumns(20);
-        jTextArea1.setRows(7);
-        jTextArea1.setName("jTextArea1"); // NOI18N
-        jScrollPane1.setViewportView(jTextArea1);
+        descTArea.setColumns(20);
+        descTArea.setRows(7);
+        descTArea.setName("descricaoTema"); // NOI18N
+
+        org.jdesktop.beansbinding.Binding binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, descTArea, org.jdesktop.beansbinding.ELProperty.create("${text}"), descTArea, org.jdesktop.beansbinding.BeanProperty.create("text"));
+        bindingGroup.addBinding(binding);
+
+        jScrollPane1.setViewportView(descTArea);
 
         jPanel1.add(jScrollPane1);
 
@@ -106,18 +112,18 @@ public class TemaDialog extends AbstractDialog{
         jPanel3.setName("jPanel3"); // NOI18N
         jPanel3.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.RIGHT));
 
-        jButton2.setText("Cancelar");
-        jButton2.setName("jButton2"); // NOI18N
-        jPanel3.add(jButton2);
+        cancelButton.setText("Cancelar");
+        cancelButton.setName("cancelButton"); // NOI18N
+        jPanel3.add(cancelButton);
 
-        jButton1.setText("Adicionar");
-        jButton1.setName("jButton1"); // NOI18N
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        adicButton.setText("Adicionar");
+        adicButton.setName("adicButton"); // NOI18N
+        adicButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                adicButtonActionPerformed(evt);
             }
         });
-        jPanel3.add(jButton1);
+        jPanel3.add(adicButton);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -143,10 +149,12 @@ public class TemaDialog extends AbstractDialog{
                 .addContainerGap(31, Short.MAX_VALUE))
         );
 
+        bindingGroup.bind();
+
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void adicButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_adicButtonActionPerformed
         try {
             // TODO impl. adic. tema
             ITemaDao temaDao = daoFactory.getTemaDao();
@@ -154,7 +162,7 @@ public class TemaDialog extends AbstractDialog{
             this.controladorDespacho.registraEexibe(ex);
         }
 
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }//GEN-LAST:event_adicButtonActionPerformed
 
     /**
     * @param args the command line arguments
@@ -174,16 +182,17 @@ public class TemaDialog extends AbstractDialog{
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private br.com.swing.componentes.personalizados.ui.CampoPanel campoPanel1;
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
+    private javax.swing.JButton adicButton;
+    private javax.swing.JButton cancelButton;
+    private javax.swing.JTextArea descTArea;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JSeparator jSeparator1;
-    private javax.swing.JTextArea jTextArea1;
+    private br.com.swing.componentes.personalizados.ui.CampoPanel tituloTField;
+    private org.jdesktop.beansbinding.BindingGroup bindingGroup;
     // End of variables declaration//GEN-END:variables
 
 }
