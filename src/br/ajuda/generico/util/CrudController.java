@@ -14,31 +14,23 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+package br.ajuda.generico.util;
 
-package testes;
-
-import br.ajuda.generico.controladordespacho.ControladorDespacho;
-import br.ajuda.generico.jdbc.annotation.ManagerAnnotationEntities;
+import java.util.List;
 
 /**
  *
  * @author jacoboliveira
  */
-public class TestAnnotation {
+public interface CrudController<B> {
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String[] args) {
-        ControladorDespacho c =new ControladorDespacho();
-        ManagerAnnotationEntities m =new ManagerAnnotationEntities();
-        TestBean testBean = new TestBean();
-        try {
-            m.analisarCamposObrig(testBean);
-        } catch (Exception ex) {
-            c.registraEexibe(ex);
-        }
-        System.exit(0);
-    }
+    public B salvar(B bean) throws Exception;
 
+    public B alterar(B bean) throws Exception;
+
+    public B excluir(B bean) throws Exception;
+
+    public B consultaUnicoRetorno(B bean) throws Exception;
+
+    public List<B> consultaLista(B bean) throws Exception;
 }

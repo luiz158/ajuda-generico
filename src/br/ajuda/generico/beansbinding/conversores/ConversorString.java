@@ -14,29 +14,32 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 package br.ajuda.generico.beansbinding.conversores;
 
 import br.ajuda.generico.beansbinding.ConversorComponente;
+import br.ajuda.generico.util.StringHelper;
 import java.awt.Component;
 
 /**
  *
  * @author jacoboliveira
  */
-public class ConversorString implements ConversorComponente{
+public class ConversorString implements ConversorComponente {
 
     @Override
     public Object converterParaObjeto(Component componente, Object valor) throws Exception {
-        if(valor==null){
+        if (valor == null) {
             return valor;
         }
-        return String.valueOf(valor);
+        String source = String.valueOf(valor);
+        if (StringHelper.isBlank(source)) {
+            return null;
+        }
+        return source;
     }
 
     @Override
     public Object converterParaComponente(Component componente, Object bean) throws Exception {
         throw new UnsupportedOperationException("Not supported yet.");
     }
-
 }

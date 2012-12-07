@@ -1,6 +1,10 @@
 <?xml version="1.1" encoding="UTF-8" ?>
 
 <Form version="1.3" maxVersion="1.7" type="org.netbeans.modules.form.forminfo.JFrameFormInfo">
+  <NonVisualComponents>
+    <Component class="javax.swing.ButtonGroup" name="buttonGroup1">
+    </Component>
+  </NonVisualComponents>
   <Properties>
     <Property name="defaultCloseOperation" type="int" value="3"/>
   </Properties>
@@ -24,16 +28,24 @@
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" attributes="0">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Group type="102" alignment="0" attributes="0">
-                      <EmptySpace min="-2" pref="103" max="-2" attributes="0"/>
-                      <Component id="jButton1" min="-2" max="-2" attributes="0"/>
-                  </Group>
-                  <Group type="102" alignment="0" attributes="0">
+                  <Group type="102" attributes="0">
                       <EmptySpace min="-2" pref="64" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Component id="dataAniverTField" alignment="0" min="-2" pref="166" max="-2" attributes="0"/>
                           <Component id="nomeTField" alignment="0" min="-2" pref="166" max="-2" attributes="0"/>
+                          <Group type="103" alignment="0" groupAlignment="1" max="-2" attributes="0">
+                              <Component id="idadeTField" alignment="0" max="32767" attributes="1"/>
+                              <Component id="salarioTField" alignment="0" max="32767" attributes="1"/>
+                              <Component id="nArquivosTField" alignment="0" pref="91" max="32767" attributes="1"/>
+                              <Component id="shortTField" alignment="0" pref="91" max="32767" attributes="1"/>
+                              <Component id="fmCBox" alignment="0" min="-2" max="-2" attributes="0"/>
+                              <Component id="totalTField" alignment="0" max="32767" attributes="1"/>
+                          </Group>
                       </Group>
+                  </Group>
+                  <Group type="102" alignment="0" attributes="0">
+                      <EmptySpace min="-2" pref="106" max="-2" attributes="0"/>
+                      <Component id="jButton1" min="-2" max="-2" attributes="0"/>
                   </Group>
               </Group>
               <EmptySpace pref="170" max="32767" attributes="0"/>
@@ -47,9 +59,21 @@
               <Component id="nomeTField" min="-2" max="-2" attributes="0"/>
               <EmptySpace min="-2" pref="4" max="-2" attributes="0"/>
               <Component id="dataAniverTField" min="-2" max="-2" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
+              <Component id="salarioTField" min="-2" max="-2" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
+              <Component id="nArquivosTField" min="-2" max="-2" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
+              <Component id="idadeTField" min="-2" max="-2" attributes="0"/>
+              <EmptySpace min="-2" pref="5" max="-2" attributes="0"/>
+              <Component id="shortTField" min="-2" max="-2" attributes="0"/>
               <EmptySpace type="unrelated" max="-2" attributes="0"/>
+              <Component id="fmCBox" min="-2" max="-2" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
+              <Component id="totalTField" min="-2" max="-2" attributes="0"/>
+              <EmptySpace pref="18" max="32767" attributes="0"/>
               <Component id="jButton1" min="-2" max="-2" attributes="0"/>
-              <EmptySpace pref="173" max="32767" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -74,6 +98,42 @@
       <Properties>
         <Property name="text" type="java.lang.String" value="dd/mm/yyyy"/>
         <Property name="name" type="java.lang.String" value="dataAniver" noResource="true"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JTextField" name="salarioTField">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="salario"/>
+        <Property name="name" type="java.lang.String" value="salario" noResource="true"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JTextField" name="nArquivosTField">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="nArquivos"/>
+        <Property name="name" type="java.lang.String" value="nArquivos" noResource="true"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JTextField" name="idadeTField">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="idade"/>
+        <Property name="name" type="java.lang.String" value="idade" noResource="true"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JTextField" name="shortTField">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="short"/>
+        <Property name="name" type="java.lang.String" value="b" noResource="true"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JCheckBox" name="fmCBox">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="F/M"/>
+        <Property name="name" type="java.lang.String" value="sexo" noResource="true"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JTextField" name="totalTField">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="total"/>
+        <Property name="name" type="java.lang.String" value="total" noResource="true"/>
       </Properties>
     </Component>
   </SubComponents>

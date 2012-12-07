@@ -15,35 +15,47 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package testes;
+package br.ajuda.generico.controladordespacho;
 
-import br.ajuda.generico.controladordespacho.ConstantsControl;
-import br.ajuda.generico.controladordespacho.ControladorDespacho;
-import br.ajuda.generico.exceptions.MensagensException;
+import java.io.Serializable;
 import java.util.logging.Level;
 
 /**
  *
  * @author jacoboliveira
  */
-public class TestControlador {
+public class MensagemLogSistema implements Serializable{
+    private static final long serialVersionUID = 4325788200378493993L;
+    private Level level;
+    private String msg;
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String[] args) {
-        ControladorDespacho c =new ControladorDespacho();
-//        c.infoMsg("test info");
-//        c.erroMsg("test erro");
-//        c.alertaMsg("test alerta");
-//        c.sucessoMsg("test sucesso");
-        MensagensException m = new MensagensException();
-        m.adicMsg(Level.WARNING, "perigo!!!!");
-        m.adicMsg(Level.SEVERE, "erro fatality!!!!");
-
-        c.registraEexibe(m);
-        //c.exibirMsgs();
-        System.exit(0);
+    public MensagemLogSistema() {
     }
 
+    public MensagemLogSistema(Level level, String msg) {
+        this.level = level;
+        this.msg = msg;
+    }
+
+    public Level getLevel() {
+        return level;
+    }
+
+    public void setLevel(Level level) {
+        this.level = level;
+    }
+
+    /**
+     * @return the msg
+     */
+    public String getMsg() {
+        return msg;
+    }
+
+    /**
+     * @param msg the msg to set
+     */
+    public void setMsg(String msg) {
+        this.msg = msg;
+    }
 }

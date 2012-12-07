@@ -5,7 +5,7 @@
 
 package br.ajuda.generico;
 
-import br.ajuda.generico.control.ControladorDespacho;
+import br.ajuda.generico.controladordespacho.ControladorDespacho;
 import br.ajuda.generico.view.MainFrame;
 import java.util.logging.Level;
 import java.util.logging.Logger;

@@ -37,6 +37,9 @@ public class ConversorDate implements ConversorComponente {
             return valor;
         }
         String source = String.valueOf(valor);
+        if (StringHelper.isBlank(source)) {
+            return null;
+        }
         boolean isAnaliseFormatoData = false;
 
         String[] formatosValidos = {

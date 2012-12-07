@@ -19,6 +19,7 @@ package br.ajuda.generico.beansbinding.conversores;
 
 import br.ajuda.generico.beansbinding.ConversorComponente;
 import br.ajuda.generico.util.NumberHelper;
+import br.ajuda.generico.util.StringHelper;
 import java.awt.Component;
 
 /**
@@ -33,6 +34,9 @@ public class ConversorByte implements ConversorComponente{
             return valor;
         }
         String source = String.valueOf(valor);
+        if (StringHelper.isBlank(source)) {
+            return null;
+        }
         if (!NumberHelper.isNumber(source)) {
             throw new NumberFormatException("Formato do numero inválido, "
                     + "por favor forneça um conversor ou formate o componente para obter o valor correto. "

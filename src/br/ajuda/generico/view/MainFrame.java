@@ -19,11 +19,9 @@ import br.ajuda.generico.util.AbstractFrame;
  * @author jacob
  */
 public class MainFrame extends AbstractFrame{
-    private DaoFactory daoFactory;
     /** Creates new form MainFrame */
     public MainFrame() {
         initComponents();
-        daoFactory = DaoFactory.getDaoFactory();
     }
 
     /** This method is called from within the constructor to
@@ -177,7 +175,8 @@ public class MainFrame extends AbstractFrame{
     }// </editor-fold>//GEN-END:initComponents
 
     private void adicTemaButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_adicTemaButtonActionPerformed
-        
+
+        controladorDespacho.despachar(new TemaDialog(this, true));
         
     }//GEN-LAST:event_adicTemaButtonActionPerformed
 

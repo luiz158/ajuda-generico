@@ -17,8 +17,8 @@
 
 package br.ajuda.generico.exceptions;
 
-import br.ajuda.generico.control.MensagemLogSistema;
-import br.ajuda.generico.control.MensagemSistema;
+import br.ajuda.generico.controladordespacho.MensagemLogSistema;
+import br.ajuda.generico.controladordespacho.MensagemSistema;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;

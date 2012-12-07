@@ -4,8 +4,8 @@
  */
 package br.ajuda.generico.util;
 
-import br.ajuda.generico.control.ControladorDespacho;
-import br.ajuda.generico.control.Visao;
+import br.ajuda.generico.controladordespacho.ControladorDespacho;
+import br.ajuda.generico.controladordespacho.Visao;
 import java.awt.Dialog;
 import java.awt.Frame;
 import java.awt.GraphicsConfiguration;

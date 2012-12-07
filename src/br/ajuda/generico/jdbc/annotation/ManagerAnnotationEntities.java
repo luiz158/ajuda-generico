@@ -7,6 +7,7 @@ package br.ajuda.generico.jdbc.annotation;
 import br.ajuda.generico.util.LogSis;
 import br.ajuda.generico.util.NumberHelper;
 import br.com.jacob.util.BeanHelper;
+import br.com.jacob.util.CollectionsUtil;
 import br.com.jacob.util.IMapa;
 import br.com.jacob.util.Mapa;
 import br.com.jacob.util.StringHelper;
@@ -217,7 +218,9 @@ public class ManagerAnnotationEntities {
                 }
             }
         }
-        throw camposEx;
+        if(!CollectionsUtil.isEmpty(camposEx.getList())){
+            throw camposEx;
+        }
     }
 //    public <K, V> void populatedMap(Map<K, V> origem, Map<K, V> destino) {
 //        if (origem.isEmpty()) {

@@ -17,6 +17,7 @@
 package testes;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.Date;
 
 /**
@@ -28,6 +29,12 @@ public class TestPessoa implements Serializable{
 
     private String nome;
     private Date dataAniver;
+    private Double salario;
+    private Long nArquivos;
+    private Integer idade;
+    private Short b;
+    private Boolean sexo;
+    private BigDecimal total;
 
     public TestPessoa() {
     }
@@ -80,6 +87,90 @@ public class TestPessoa implements Serializable{
      */
     public void setDataAniver(Date dataAniver) {
         this.dataAniver = dataAniver;
+    }
+
+    /**
+     * @return the salario
+     */
+    public Double getSalario() {
+        return salario;
+    }
+
+    /**
+     * @param salario the salario to set
+     */
+    public void setSalario(Double salario) {
+        this.salario = salario;
+    }
+
+    /**
+     * @return the nArquivos
+     */
+    public Long getnArquivos() {
+        return nArquivos;
+    }
+
+    /**
+     * @param nArquivos the nArquivos to set
+     */
+    public void setnArquivos(Long nArquivos) {
+        this.nArquivos = nArquivos;
+    }
+
+    /**
+     * @return the idade
+     */
+    public Integer getIdade() {
+        return idade;
+    }
+
+    /**
+     * @param idade the idade to set
+     */
+    public void setIdade(Integer idade) {
+        this.idade = idade;
+    }
+
+    /**
+     * @return the b
+     */
+    public Short getB() {
+        return b;
+    }
+
+    /**
+     * @param b the b to set
+     */
+    public void setB(Short b) {
+        this.b = b;
+    }
+
+    /**
+     * @return the sexo
+     */
+    public Boolean getSexo() {
+        return sexo;
+    }
+
+    /**
+     * @param sexo the sexo to set
+     */
+    public void setSexo(Boolean sexo) {
+        this.sexo = sexo;
+    }
+
+    /**
+     * @return the total
+     */
+    public BigDecimal getTotal() {
+        return total;
+    }
+
+    /**
+     * @param total the total to set
+     */
+    public void setTotal(BigDecimal total) {
+        this.total = total;
     }
 
 }

@@ -17,6 +17,7 @@
 
 package testes;
 
+import br.ajuda.generico.util.NumberHelper;
 import br.ajuda.generico.util.RegexUtil;
 import java.text.ParseException;
 
@@ -34,7 +35,8 @@ public class TestMain {
 //        GregorianCalendar calendar = new GregorianCalendar();
 //
 //        p(""+calendar.get(GregorianCalendar.DAY_OF_MONTH));
-        p(RegexUtil.matcher("12/12/2012", RegexUtil.PATTERN_DATE_DDMMYYYY)+"");
+        //p(RegexUtil.matcher("12/12/2012", RegexUtil.PATTERN_DATE_DDMMYYYY)+"");
+        p(String.valueOf(NumberHelper.newDecimalFormatCustom().parse("1.200,50")));
     }
 
     private static void p(String s) {

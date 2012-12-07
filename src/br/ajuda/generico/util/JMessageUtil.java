@@ -4,7 +4,7 @@
  */
 package br.ajuda.generico.util;
 
-import br.ajuda.generico.control.ConstantsControl;
+import br.ajuda.generico.controladordespacho.ConstantsControl;
 import java.awt.Component;
 import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;

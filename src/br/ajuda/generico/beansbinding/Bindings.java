@@ -77,15 +77,17 @@ public class Bindings {
     }
 
     /**
-     * realisa o processo de população do atraves da ligação do componente adicionada previamente
+     * realisa o processo de população do bean, atraves da ligação do componente adicionada previamente
      * @param <T> objeto generico bean
      * @param <C> objeto generico componente
      * @param bean objeto bean a ser analisado
-     * @throws Exception se houver algum erro durante a analise do bean,exemplo: erro de conversao,se o bean estiver nulo etc.
+     * @throws Exception se houver algum erro durante a analise do bean,exemplo: erro de conversao,erro de formato campo,se o bean estiver nulo etc.
      */
     public static <T, C> void analisarBean(T bean) throws Exception {
         //TODO realizar testes no demais tipos, foram testados:string,date.Testar tambem os conversores
-
+        //TODO criar um exeception que agrupe todas os erros ocorridos nos campos para exibir na tela de uma vez so
+        //TODO BUG : preenchimento em branco do componente voltar nulo pro bean(corrigido)
+        //TODO criar um arquivo properties contendo as mensagens customizadas dos conversores
         //verifico se bean esta nulo
         if (bean == null) {
             throw new NullPointerException("o bean passado para realisar o binding esta nulo!");

@@ -24,7 +24,11 @@
 package testes;
 
 import br.ajuda.generico.beansbinding.Bindings;
-import br.ajuda.generico.util.DateUtil;
+import br.ajuda.generico.beansbinding.ConversorComponente;
+import br.ajuda.generico.util.NumberHelper;
+import br.ajuda.generico.util.StringHelper;
+import java.awt.Component;
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -40,8 +44,40 @@ public class TestFormBinding extends javax.swing.JFrame {
         initComponents();
         Bindings.adicLigacao(nomeTField, "text", String.class);
         Bindings.adicLigacao(dataAniverTField, "text", Date.class);
+        Bindings.adicLigacao(salarioTField, "text", Double.class);
+        Bindings.adicLigacao(nArquivosTField, "text", Long.class);
+        Bindings.adicLigacao(idadeTField, "text", Integer.class);
+        Bindings.adicLigacao(shortTField, "text", Short.class);
+        Bindings.adicLigacao(fmCBox, "selected", Boolean.class);
+        Bindings.adicLigacao(totalTField, "text", BigDecimal.class,new ConversorComponente() {
+
+            @Override
+            public Object converterParaObjeto(Component componente, Object valor) throws Exception {
+                if(valor ==null){
+                    return valor;
+                }
+                String source = StringHelper.valueOf(valor);
+                if(StringHelper.isBlank(source)){
+                    return null;
+                }
+                String tmp = source.replaceAll(",", "").replaceAll("\\.", "");
+                if(!NumberHelper.isNumber(tmp)){
+                   throw new NumberFormatException("O valor informado:'"+source
+                           + "', esta em um formato inválido! "
+                           + "Usar este formato,exemplo: 1.200,00 ou 50,00");
+                }
+                return new BigDecimal(String.valueOf(NumberHelper.newDecimalFormatCustom().parse(source)));
+            }
+
+            @Override
+            public Object converterParaComponente(Component componente, Object bean) throws Exception {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+        });
+        
     }
 
+	
     /** This method is called from within the constructor to
      * initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is
@@ -51,9 +87,16 @@ public class TestFormBinding extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        buttonGroup1 = new javax.swing.ButtonGroup();
         nomeTField = new javax.swing.JTextField();
         jButton1 = new javax.swing.JButton();
         dataAniverTField = new javax.swing.JTextField();
+        salarioTField = new javax.swing.JTextField();
+        nArquivosTField = new javax.swing.JTextField();
+        idadeTField = new javax.swing.JTextField();
+        shortTField = new javax.swing.JTextField();
+        fmCBox = new javax.swing.JCheckBox();
+        totalTField = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -71,6 +114,24 @@ public class TestFormBinding extends javax.swing.JFrame {
         dataAniverTField.setText("dd/mm/yyyy");
         dataAniverTField.setName("dataAniver"); // NOI18N
 
+        salarioTField.setText("salario");
+        salarioTField.setName("salario"); // NOI18N
+
+        nArquivosTField.setText("nArquivos");
+        nArquivosTField.setName("nArquivos"); // NOI18N
+
+        idadeTField.setText("idade");
+        idadeTField.setName("idade"); // NOI18N
+
+        shortTField.setText("short");
+        shortTField.setName("b"); // NOI18N
+
+        fmCBox.setText("F/M");
+        fmCBox.setName("sexo"); // NOI18N
+
+        totalTField.setText("total");
+        totalTField.setName("total"); // NOI18N
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -78,13 +139,20 @@ public class TestFormBinding extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(103, 103, 103)
-                        .addComponent(jButton1))
-                    .addGroup(layout.createSequentialGroup()
                         .addGap(64, 64, 64)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(dataAniverTField, javax.swing.GroupLayout.PREFERRED_SIZE, 166, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(nomeTField, javax.swing.GroupLayout.PREFERRED_SIZE, 166, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                            .addComponent(nomeTField, javax.swing.GroupLayout.PREFERRED_SIZE, 166, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                .addComponent(idadeTField, javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(salarioTField, javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(nArquivosTField, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 91, Short.MAX_VALUE)
+                                .addComponent(shortTField, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 91, Short.MAX_VALUE)
+                                .addComponent(fmCBox, javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(totalTField, javax.swing.GroupLayout.Alignment.LEADING))))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(106, 106, 106)
+                        .addComponent(jButton1)))
                 .addContainerGap(170, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -94,20 +162,31 @@ public class TestFormBinding extends javax.swing.JFrame {
                 .addComponent(nomeTField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(4, 4, 4)
                 .addComponent(dataAniverTField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(salarioTField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(nArquivosTField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(idadeTField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(5, 5, 5)
+                .addComponent(shortTField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(fmCBox)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(totalTField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 18, Short.MAX_VALUE)
                 .addComponent(jButton1)
-                .addContainerGap(173, Short.MAX_VALUE))
+                .addContainerGap())
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-
-        TestPessoa p = new TestPessoa();
+	TestPessoa p = new TestPessoa();
         try {
             Bindings.analisarBean(p);
-            System.out.println(DateUtil.dateToString(DateUtil.FORMAT_DATETIME_DDMMYYYY_HHMM, p.getDataAniver()));
+            System.out.println(p);
         } catch (Exception ex) {
             Logger.getLogger(TestFormBinding.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -124,11 +203,19 @@ public class TestFormBinding extends javax.swing.JFrame {
             }
         });
     }
+		
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.ButtonGroup buttonGroup1;
     private javax.swing.JTextField dataAniverTField;
+    private javax.swing.JCheckBox fmCBox;
+    private javax.swing.JTextField idadeTField;
     private javax.swing.JButton jButton1;
+    private javax.swing.JTextField nArquivosTField;
     private javax.swing.JTextField nomeTField;
+    private javax.swing.JTextField salarioTField;
+    private javax.swing.JTextField shortTField;
+    private javax.swing.JTextField totalTField;
     // End of variables declaration//GEN-END:variables
 
 }

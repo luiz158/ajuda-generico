@@ -15,30 +15,12 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package testes;
-
-import br.ajuda.generico.controladordespacho.ControladorDespacho;
-import br.ajuda.generico.jdbc.annotation.ManagerAnnotationEntities;
+package br.ajuda.generico.controladordespacho;
 
 /**
  *
  * @author jacoboliveira
  */
-public class TestAnnotation {
-
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String[] args) {
-        ControladorDespacho c =new ControladorDespacho();
-        ManagerAnnotationEntities m =new ManagerAnnotationEntities();
-        TestBean testBean = new TestBean();
-        try {
-            m.analisarCamposObrig(testBean);
-        } catch (Exception ex) {
-            c.registraEexibe(ex);
-        }
-        System.exit(0);
-    }
-
+public interface Visao {
+    public void setControladorDespacho(ControladorDespacho controladorDespacho);
 }

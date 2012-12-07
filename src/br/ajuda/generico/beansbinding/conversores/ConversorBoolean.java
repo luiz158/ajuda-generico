@@ -18,6 +18,7 @@
 package br.ajuda.generico.beansbinding.conversores;
 
 import br.ajuda.generico.beansbinding.ConversorComponente;
+import br.ajuda.generico.util.StringHelper;
 import java.awt.Component;
 
 /**
@@ -32,6 +33,9 @@ public class ConversorBoolean implements ConversorComponente{
             return valor;
         }
         String source = String.valueOf(valor);
+        if(StringHelper.isBlank(source)){
+           return null;
+        }
         return Boolean.valueOf(source);
     }
 

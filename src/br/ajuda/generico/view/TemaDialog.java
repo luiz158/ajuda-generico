@@ -20,26 +20,29 @@
  *
  * Created on 05/12/2012, 11:11:22
  */
-
 package br.ajuda.generico.view;
 
-import br.ajuda.generico.dao.ITemaDao;
-import br.ajuda.generico.jdbc.DaoFactory;
+import br.ajuda.generico.beansbinding.Bindings;
+import br.ajuda.generico.controller.TemaController;
+import br.ajuda.generico.entities.Tema;
 import br.ajuda.generico.util.AbstractDialog;
-import java.awt.Component;
+import br.ajuda.generico.util.JMessageUtil;
 
 /**
  *
  * @author jacoboliveira
  */
-public class TemaDialog extends AbstractDialog{
-    private DaoFactory daoFactory;
+public class TemaDialog extends AbstractDialog {
+
+    private TemaController temaController;
+
     /** Creates new form TemaDialog */
     public TemaDialog(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
-        daoFactory = DaoFactory.getDaoFactory();
-       
+        temaController = new TemaController();
+        Bindings.adicLigacao(tituloTField, "text", String.class);
+        Bindings.adicLigacao(descTArea, "text", String.class);
     }
 
     /** This method is called from within the constructor to
@@ -54,11 +57,13 @@ public class TemaDialog extends AbstractDialog{
         bindingGroup = new org.jdesktop.beansbinding.BindingGroup();
 
         jPanel2 = new javax.swing.JPanel();
-        tituloTField = new br.com.swing.componentes.personalizados.ui.CampoPanel();
         jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         descTArea = new javax.swing.JTextArea();
+        jPanel4 = new javax.swing.JPanel();
+        jLabel2 = new javax.swing.JLabel();
+        tituloTField = new javax.swing.JTextField();
         jSeparator1 = new javax.swing.JSeparator();
         jPanel3 = new javax.swing.JPanel();
         cancelButton = new javax.swing.JButton();
@@ -70,18 +75,9 @@ public class TemaDialog extends AbstractDialog{
         jPanel2.setName("jPanel2"); // NOI18N
         jPanel2.setLayout(new java.awt.GridBagLayout());
 
-        tituloTField.setAlterarDimensaoLabel(new java.awt.Dimension(58, 14));
-        tituloTField.setLabelText("Titulo: ");
-        tituloTField.setName("tituloTField"); // NOI18N
-        tituloTField.setNomeCampo("tituloTema");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.ipadx = 293;
-        jPanel2.add(tituloTField, gridBagConstraints);
-
         jPanel1.setName("jPanel1"); // NOI18N
         jPanel1.setLayout(new javax.swing.BoxLayout(jPanel1, javax.swing.BoxLayout.LINE_AXIS));
 
-        jLabel1.setFont(new java.awt.Font("Tahoma", 1, 11));
         jLabel1.setText("Descrição:");
         jLabel1.setName("jLabel1"); // NOI18N
         jPanel1.add(jLabel1);
@@ -106,6 +102,21 @@ public class TemaDialog extends AbstractDialog{
         gridBagConstraints.ipady = 94;
         gridBagConstraints.insets = new java.awt.Insets(5, 0, 0, 0);
         jPanel2.add(jPanel1, gridBagConstraints);
+
+        jPanel4.setName("jPanel4"); // NOI18N
+        jPanel4.setLayout(new javax.swing.BoxLayout(jPanel4, javax.swing.BoxLayout.LINE_AXIS));
+
+        jLabel2.setText("Titulo:");
+        jLabel2.setName("jLabel2"); // NOI18N
+        jLabel2.setPreferredSize(new java.awt.Dimension(50, 14));
+        jPanel4.add(jLabel2);
+
+        tituloTField.setName("tituloTema"); // NOI18N
+        jPanel4.add(tituloTField);
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.ipadx = 292;
+        jPanel2.add(jPanel4, gridBagConstraints);
 
         jSeparator1.setName("jSeparator1"); // NOI18N
 
@@ -155,9 +166,13 @@ public class TemaDialog extends AbstractDialog{
     }// </editor-fold>//GEN-END:initComponents
 
     private void adicButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_adicButtonActionPerformed
+        //TODO terminar a implementacao do cadastro de tema
         try {
             // TODO impl. adic. tema
-            ITemaDao temaDao = daoFactory.getTemaDao();
+            Tema tema = new Tema();
+            Bindings.analisarBean(tema);
+            temaController.salvar(tema);            
+            JMessageUtil.showSucessMessage(this, "Tema inserido com sucesso!");
         } catch (Exception ex) {
             this.controladorDespacho.registraEexibe(ex);
         }
@@ -165,13 +180,17 @@ public class TemaDialog extends AbstractDialog{
     }//GEN-LAST:event_adicButtonActionPerformed
 
     /**
-    * @param args the command line arguments
-    */
+     * @param args the command line arguments
+     */
     public static void main(String args[]) {
         java.awt.EventQueue.invokeLater(new Runnable() {
+
+            @Override
             public void run() {
                 TemaDialog dialog = new TemaDialog(new javax.swing.JFrame(), true);
                 dialog.addWindowListener(new java.awt.event.WindowAdapter() {
+
+                    @Override
                     public void windowClosing(java.awt.event.WindowEvent e) {
                         System.exit(0);
                     }
@@ -180,19 +199,19 @@ public class TemaDialog extends AbstractDialog{
             }
         });
     }
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton adicButton;
     private javax.swing.JButton cancelButton;
     private javax.swing.JTextArea descTArea;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
+    private javax.swing.JPanel jPanel4;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JSeparator jSeparator1;
-    private br.com.swing.componentes.personalizados.ui.CampoPanel tituloTField;
+    private javax.swing.JTextField tituloTField;
     private org.jdesktop.beansbinding.BindingGroup bindingGroup;
     // End of variables declaration//GEN-END:variables
-
 }
