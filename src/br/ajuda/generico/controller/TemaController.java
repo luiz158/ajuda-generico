@@ -18,8 +18,7 @@ package br.ajuda.generico.controller;
 
 import br.ajuda.generico.dao.ITemaDao;
 import br.ajuda.generico.entities.Tema;
-import br.ajuda.generico.jdbc.DaoFactory;
-import br.ajuda.generico.jdbc.annotation.ManagerAnnotationEntities;
+import br.ajuda.generico.util.AbstractController;
 import br.ajuda.generico.util.CrudController;
 import br.ajuda.generico.util.SqlUtil;
 import java.sql.PreparedStatement;
@@ -29,19 +28,17 @@ import java.util.List;
  *
  * @author jacoboliveira
  */
-public class TemaController implements CrudController<Tema> {
+public class TemaController extends AbstractController implements CrudController<Tema> {
 
-    private DaoFactory daoFactory;
     private ITemaDao temaDao;
-    private ManagerAnnotationEntities managerAnnotationEntities;
+
     public TemaController() throws Exception {
-        daoFactory = DaoFactory.getDaoFactory();
+        super();
         temaDao = daoFactory.getTemaDao();
-        managerAnnotationEntities = new ManagerAnnotationEntities();
     }
 
     @Override
-    public Tema salvar(Tema tema) throws Exception {        
+    public Tema salvar(Tema tema) throws Exception {
         temaDao.savePrepare(tema);
         temaDao.commit();
         return tema;
@@ -56,9 +53,9 @@ public class TemaController implements CrudController<Tema> {
 
     @Override
     public Tema excluir(Tema tema) throws Exception {
-        PreparedStatement p=temaDao.prepare("DELETE FROM "
-                +managerAnnotationEntities.getNomeTabela(tema)
-                +" WHERE "+"id_tema=?");
+        PreparedStatement p = temaDao.prepare("DELETE FROM "
+                + managerAnnotationEntities.getNomeTabela(tema)
+                + " WHERE " + "id_tema=?");
         tema = temaDao.prepareQueryPorIdsReturnSingleBean(tema);
         p.setLong(1, tema.getIdTema());
         p.execute();
@@ -68,13 +65,13 @@ public class TemaController implements CrudController<Tema> {
 
     @Override
     public Tema consultaUnicoRetorno(Tema bean) throws Exception {
-        Tema tema =temaDao.prepareQueryReturnSingleBean(bean);
+        Tema tema = temaDao.prepareQueryReturnSingleBean(bean);
         temaDao.commit();
         return tema;
     }
 
     @Override
     public List<Tema> consultaLista(Tema bean) throws Exception {
-        return SqlUtil.parseListMapToListBean(temaDao.cexecuteQuery("SELECT * FROM "+managerAnnotationEntities.getNomeTabela(bean)),Tema.class);
+        return SqlUtil.parseListMapToListBean(temaDao.cexecuteQuery("SELECT * FROM " + managerAnnotationEntities.getNomeTabela(bean)), Tema.class);
     }
 }
