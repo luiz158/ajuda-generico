@@ -27,6 +27,8 @@ import br.ajuda.generico.controller.TemaController;
 import br.ajuda.generico.entities.Tema;
 import br.ajuda.generico.util.AbstractDialog;
 import br.ajuda.generico.util.JMessageUtil;
+import br.ajuda.generico.util.StringHelper;
+import br.com.swing.componentes.personalizados.ui.ListaComFiltro;
 
 /**
  *
@@ -35,18 +37,14 @@ import br.ajuda.generico.util.JMessageUtil;
 public class TemaDialog extends AbstractDialog {
 
     private TemaController temaController;
-    
+
     /** Creates new form TemaDialog */
     public TemaDialog(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
-        try {
-            temaController = new TemaController();
-        } catch (Exception ex) {
-            controladorDespacho.registraEexibe(ex);
-        }
-        Bindings.adicLigacao(tituloTField, "text",null, String.class);
-        Bindings.adicLigacao(descTArea, "text",null, String.class);
+
+        Bindings.adicLigacao(tituloTField, "text", null, String.class);
+        Bindings.adicLigacao(descTArea, "text", null, String.class);
     }
 
     /** This method is called from within the constructor to
@@ -69,11 +67,15 @@ public class TemaDialog extends AbstractDialog {
         tituloTField = new javax.swing.JTextField();
         jSeparator1 = new javax.swing.JSeparator();
         jPanel3 = new javax.swing.JPanel();
-        cancelButton = new javax.swing.JButton();
-        adicButton = new javax.swing.JButton();
+        fecharButton = new javax.swing.JButton();
+        salvarButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setTitle("Cadastro de Temas");
         addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosed(java.awt.event.WindowEvent evt) {
+                formWindowClosed(evt);
+            }
             public void windowOpened(java.awt.event.WindowEvent evt) {
                 formWindowOpened(evt);
             }
@@ -129,23 +131,23 @@ public class TemaDialog extends AbstractDialog {
         jPanel3.setName("jPanel3"); // NOI18N
         jPanel3.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.RIGHT));
 
-        cancelButton.setText("Cancelar");
-        cancelButton.setName("cancelButton"); // NOI18N
-        cancelButton.addActionListener(new java.awt.event.ActionListener() {
+        fecharButton.setText("Fechar");
+        fecharButton.setName("fecharButton"); // NOI18N
+        fecharButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cancelButtonActionPerformed(evt);
+                fecharButtonActionPerformed(evt);
             }
         });
-        jPanel3.add(cancelButton);
+        jPanel3.add(fecharButton);
 
-        adicButton.setText("Adicionar");
-        adicButton.setName("adicButton"); // NOI18N
-        adicButton.addActionListener(new java.awt.event.ActionListener() {
+        salvarButton.setText("Adicionar");
+        salvarButton.setName("salvarButton"); // NOI18N
+        salvarButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                adicButtonActionPerformed(evt);
+                salvarButtonActionPerformed(evt);
             }
         });
-        jPanel3.add(adicButton);
+        jPanel3.add(salvarButton);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -171,43 +173,87 @@ public class TemaDialog extends AbstractDialog {
                 .addContainerGap(31, Short.MAX_VALUE))
         );
 
-        pack();
+        java.awt.Dimension screenSize = java.awt.Toolkit.getDefaultToolkit().getScreenSize();
+        setBounds((screenSize.width-456)/2, (screenSize.height-351)/2, 456, 351);
     }// </editor-fold>//GEN-END:initComponents
 
-    private void adicButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_adicButtonActionPerformed
-        //TODO terminar a implementacao do cadastro de tema
+    private void salvarButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_salvarButtonActionPerformed
+
         try {
-            adicButton.setEnabled(false);
-            // TODO impl. adic. tema
+
             Tema tema = new Tema();
-            Bindings.analisarBean(tema);
-            temaController.salvar(tema);            
-            JMessageUtil.showSucessMessage(this, "Tema inserido com sucesso!");
-            Bindings.limpar(Tema.class);
-            adicButton.setEnabled(true);
+
+            int operacao = (Integer) controladorDespacho.getParam(MainFrame.OPER_TEMA);
+
+            //se a operacao for adicionar o tema
+            if (operacao == MainFrame.OPER_ADIC_TEMA) {
+                Bindings.analisarBean(tema);
+                temaController.salvar(tema);
+                //adiciono o tema na lista da janela principal
+                ((ListaComFiltro<Tema>) controladorDespacho.getParam(MainFrame.COMP_ADIC_TEMA_JLIST)).adicionarItem(tema);
+                JMessageUtil.showSucessMessage(this, "Tema:'"
+                        + StringHelper.getFraseStringLimitado(tema.getTituloTema(), 30) + "', inserido com sucesso!");
+                Bindings.limpar(Tema.class);
+            } else {//senao altera o tema
+                tema = (Tema) controladorDespacho.getParam(MainFrame.OBJ_TEMA);
+                Bindings.analisarBean(tema);
+                temaController.alterar(tema);
+                //altero o tema na lista da janela principal
+                ListaComFiltro<Tema> adicTemaList = (ListaComFiltro) controladorDespacho.getParam(MainFrame.COMP_ADIC_TEMA_JLIST);
+
+                adicTemaList.alterarItem(tema, adicTemaList.getList().getSelectedIndex());
+
+                JMessageUtil.showSucessMessage(this, "Tema:'"
+                        + StringHelper.getFraseStringLimitado(tema.getTituloTema(), 30) + "', alterado com sucesso!");
+
+                dispose();
+            }
+
             tituloTField.setRequestFocusEnabled(true);
         } catch (Exception ex) {
             this.controladorDespacho.registraEexibe(ex);
         }
 
-    }//GEN-LAST:event_adicButtonActionPerformed
+    }//GEN-LAST:event_salvarButtonActionPerformed
 
-    private void cancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelButtonActionPerformed
-        
+    private void fecharButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fecharButtonActionPerformed
+
         dispose();
-    }//GEN-LAST:event_cancelButtonActionPerformed
+
+    }//GEN-LAST:event_fecharButtonActionPerformed
 
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
-        if(controladorDespacho.getParam(MainFrame.OPER_TEMA)!=null
-                &&controladorDespacho.getParam(MainFrame.OPER_TEMA).equals(1)){
+
+        try {
+            temaController = new TemaController();
+        } catch (Exception ex) {
+            controladorDespacho.registraEexibe(ex);
+        }
+
+        if (controladorDespacho.getParam(MainFrame.OPER_TEMA) != null
+                && ((Integer) controladorDespacho.getParam(MainFrame.OPER_TEMA)) == MainFrame.OPER_ALT_TEMA) {
             try {
+
                 Tema tema = temaController.consultaUnicoRetorno((Tema) controladorDespacho.getParam(MainFrame.OBJ_TEMA));
-                System.out.println(tema);
+                if (tema == null) {
+                    throw new NullPointerException("Objeto 'tema' esta nulo! Tela:'"+getTitle()+ "'");
+                }
+                tituloTField.setText(tema.getTituloTema());
+                descTArea.setText(tema.getDescricaoTema());
+                salvarButton.setText("Alterar");
+
             } catch (Exception ex) {
                 controladorDespacho.registraEexibe(ex);
             }
         }
     }//GEN-LAST:event_formWindowOpened
+
+    private void formWindowClosed(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosed
+
+        //remocao dos parametros
+        controladorDespacho.removerParam(MainFrame.OPER_TEMA);
+        controladorDespacho.removerParam(MainFrame.OBJ_TEMA);
+    }//GEN-LAST:event_formWindowClosed
 
     /**
      * @param args the command line arguments
@@ -230,9 +276,8 @@ public class TemaDialog extends AbstractDialog {
         });
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton adicButton;
-    private javax.swing.JButton cancelButton;
     private javax.swing.JTextArea descTArea;
+    private javax.swing.JButton fecharButton;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JPanel jPanel1;
@@ -241,6 +286,7 @@ public class TemaDialog extends AbstractDialog {
     private javax.swing.JPanel jPanel4;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JSeparator jSeparator1;
+    private javax.swing.JButton salvarButton;
     private javax.swing.JTextField tituloTField;
     // End of variables declaration//GEN-END:variables
 }

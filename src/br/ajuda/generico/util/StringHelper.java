@@ -104,4 +104,13 @@ public class StringHelper extends StringUtils {
         return newText.toString();
     }
 
+    public static String getFraseStringLimitado(String frase,int fim){
+        if(frase==null){
+            throw new NullPointerException("O objeto 'frase' esta nulo!");
+        }
+        if(frase.length()<=fim){
+            return frase;
+        }
+        return frase.substring(0, fim)+"...";
+    }
 }

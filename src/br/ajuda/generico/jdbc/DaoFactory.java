@@ -4,6 +4,7 @@
  */
 package br.ajuda.generico.jdbc;
 
+import br.ajuda.generico.dao.ISubTemaDao;
 import br.ajuda.generico.dao.ITemaDao;
 
 /**
@@ -15,6 +16,7 @@ public abstract class DaoFactory {
 //    public final static int POSTGRESQL = 1, MYSQL = 2, HSQLDB = 3;
 
     public abstract ITemaDao getTemaDao() throws Exception;
+    public abstract ISubTemaDao getSubTemaDao() throws Exception;
 
     public static DaoFactory getDaoFactory(){
         return new DaoFactoryImpl();

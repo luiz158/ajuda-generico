@@ -131,7 +131,7 @@ public class HsqldbDaoFactory<T> implements GenericDao<T> {
             Object v =camposMap.getValue(par.getKey());
             if (v != null) {
                 if(v instanceof String){
-                    camposStr.append(par.getKey()).append("=lower(?) AND ");
+                    camposStr.append("lower(").append(par.getKey()).append(")").append("=? AND ");
                 }else{
                     camposStr.append(par.getKey()).append("=? AND ");
                 }
@@ -196,8 +196,11 @@ public class HsqldbDaoFactory<T> implements GenericDao<T> {
     @Override
     public void savePrepare(T bean) throws Exception {
         managerAnnotationEntities.analisarCamposObrig(bean);
-
-        String sql = (new StringBuilder()).append("INSERT INTO ").append(managerAnnotationEntities.getNomeTabela(bean)).append(" (").toString();
+        String nomeTabela = managerAnnotationEntities.getNomeTabela(bean);
+        if(StringHelper.isBlank(nomeTabela)){
+            throw new NullPointerException("Informe o nome da tabela na anotacao da classe: "+bean.getClass().getName());
+        }
+        String sql = (new StringBuilder()).append("INSERT INTO ").append(nomeTabela).append(" (").toString();
 
         IMapa nomeCamposMap = managerAnnotationEntities.getCamposSemIds(bean);
         List<Pares> pares = nomeCamposMap.list();
@@ -371,8 +374,11 @@ public class HsqldbDaoFactory<T> implements GenericDao<T> {
     public void updatePrepare(T bean) throws Exception {
 
         managerAnnotationEntities.analisarCamposObrig(bean);
-
-        String sql = (new StringBuilder()).append("UPDATE ").append(managerAnnotationEntities.getNomeTabela(bean)).append(" SET ").toString();
+        String nomeTabela = managerAnnotationEntities.getNomeTabela(bean);
+        if(StringHelper.isBlank(nomeTabela)){
+            throw new NullPointerException("Informe o nome da tabela na anotacao da classe: "+bean.getClass().getName());
+        }
+        String sql = (new StringBuilder()).append("UPDATE ").append(nomeTabela).append(" SET ").toString();
 
         //obtenho os campos sem os ids da entidade mapeada
         IMapa nomeCamposMap = managerAnnotationEntities.getCamposSemIds(bean);

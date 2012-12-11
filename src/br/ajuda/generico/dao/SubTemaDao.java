@@ -14,26 +14,27 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package br.ajuda.generico.jdbc;
+package br.ajuda.generico.dao;
 
-import br.ajuda.generico.dao.ISubTemaDao;
-import br.ajuda.generico.dao.ITemaDao;
-import br.ajuda.generico.dao.SubTemaDao;
-import br.ajuda.generico.dao.TemaDao;
+import br.ajuda.generico.entities.SubTema;
+import br.ajuda.generico.jdbc.HsqldbDaoFactory;
 
 /**
  * 
  * @author jacob
  */
-public class DaoFactoryImpl extends DaoFactory {
+public class SubTemaDao extends HsqldbDaoFactory<SubTema> implements ISubTemaDao {
 
-    @Override
-    public ITemaDao getTemaDao() throws Exception {       
-        return TemaDao.getTemaDao();
+    private static ISubTemaDao subTemaDao;
+
+    public SubTemaDao() throws Exception {
+        super();
     }
 
-    @Override
-    public ISubTemaDao getSubTemaDao() throws Exception {
-        return SubTemaDao.getSubTemaDao();
+    public static ISubTemaDao getSubTemaDao() throws Exception {
+        if (subTemaDao == null) {
+            subTemaDao = new SubTemaDao();
+        }
+        return subTemaDao;
     }
 }

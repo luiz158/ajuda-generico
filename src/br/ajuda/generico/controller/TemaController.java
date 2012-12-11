@@ -22,6 +22,7 @@ import br.ajuda.generico.jdbc.DaoFactory;
 import br.ajuda.generico.jdbc.annotation.ManagerAnnotationEntities;
 import br.ajuda.generico.util.CrudController;
 import br.ajuda.generico.util.SqlUtil;
+import java.sql.PreparedStatement;
 import java.util.List;
 
 /**
@@ -32,7 +33,7 @@ public class TemaController implements CrudController<Tema> {
 
     private DaoFactory daoFactory;
     private ITemaDao temaDao;
-    ManagerAnnotationEntities managerAnnotationEntities;
+    private ManagerAnnotationEntities managerAnnotationEntities;
     public TemaController() throws Exception {
         daoFactory = DaoFactory.getDaoFactory();
         temaDao = daoFactory.getTemaDao();
@@ -47,13 +48,22 @@ public class TemaController implements CrudController<Tema> {
     }
 
     @Override
-    public Tema alterar(Tema bean) throws Exception {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public Tema alterar(Tema tema) throws Exception {
+        temaDao.updatePrepare(tema);
+        temaDao.commit();
+        return tema;
     }
 
     @Override
-    public Tema excluir(Tema bean) throws Exception {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public Tema excluir(Tema tema) throws Exception {
+        PreparedStatement p=temaDao.prepare("DELETE FROM "
+                +managerAnnotationEntities.getNomeTabela(tema)
+                +" WHERE "+"id_tema=?");
+        tema = temaDao.prepareQueryPorIdsReturnSingleBean(tema);
+        p.setLong(1, tema.getIdTema());
+        p.execute();
+        temaDao.commit();
+        return tema;
     }
 
     @Override

@@ -117,7 +117,7 @@ public class ManagerAnnotationEntities {
                 beanMap.adicionar(campoBD.nome(), valor);
                 continue;
             }
-            if (field.isAnnotationPresent(CampoBD.class)) {
+            if (field.isAnnotationPresent(CampoBD.class)&&!flag) {
                 field.setAccessible(true);
                 CampoBD campoBD = field.getAnnotation(CampoBD.class);
                 Object valor = BeanHelper.getPropriedade(bean, field.getName());

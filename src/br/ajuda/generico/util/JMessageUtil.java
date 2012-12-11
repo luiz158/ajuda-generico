@@ -6,6 +6,7 @@ package br.ajuda.generico.util;
 
 import br.ajuda.generico.controladordespacho.ConstantsControl;
 import java.awt.Component;
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
@@ -97,7 +98,7 @@ public class JMessageUtil {
     }
 
     public static int showConfirm(String message) {
-        return JOptionPane.showConfirmDialog(null, message, "Confirmação", JOptionPane.OK_CANCEL_OPTION);
+        return JOptionPane.showConfirmDialog(new JFrame(), message, "Confirmação", JOptionPane.OK_CANCEL_OPTION);
     }
 
     public static void showMensagensSistema(Component comp, String message) {

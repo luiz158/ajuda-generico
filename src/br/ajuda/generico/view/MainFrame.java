@@ -13,10 +13,16 @@ package br.ajuda.generico.view;
 import br.ajuda.generico.controller.TemaController;
 import br.ajuda.generico.entities.Tema;
 import br.ajuda.generico.util.AbstractFrame;
+import br.ajuda.generico.util.JMessageUtil;
+import br.ajuda.generico.util.ListSupport;
+import br.ajuda.generico.util.StringHelper;
 import java.awt.Component;
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.JList;
+import javax.swing.JOptionPane;
 import javax.swing.ListCellRenderer;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
@@ -28,11 +34,36 @@ public class MainFrame extends AbstractFrame {
 
     public static final String OBJ_TEMA = "tema";
     public static final String OPER_TEMA = "operacao_tema";
+    public static final int OPER_ADIC_TEMA = 1;
+    public static final int OPER_ALT_TEMA = 2;
+    public static final String COMP_ADIC_TEMA_JLIST = "adicTemaList";
     private TemaController temaController;
+    private ListSupport adicTemaLSupport;
 
     /** Creates new form MainFrame */
     public MainFrame() {
         initComponents();
+        adicTemaList.getList().setAutoCreateRowSorter(true);
+        adicTemaLSupport = new ListSupport(adicTemaList.getList());
+        adicTemaLSupport.configureJXList();
+        
+        adicTemaList.getField().getDocument().addDocumentListener(new DocumentListener() {
+            String nomeCampo="tituloTema";
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                adicTemaLSupport.filtrarBusca(adicTemaList.getField().getText(),nomeCampo);
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                adicTemaLSupport.filtrarBusca(adicTemaList.getField().getText(),nomeCampo);
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                adicTemaLSupport.filtrarBusca(adicTemaList.getField().getText(),nomeCampo);
+            }
+        });
         try {
             temaController = new TemaController();
         } catch (Exception ex) {
@@ -52,14 +83,17 @@ public class MainFrame extends AbstractFrame {
                 }
             }
         });
-
+      
         adicTemaList.addListSelectionListener(new ListSelectionListener() {
 
             @Override
             public void valueChanged(ListSelectionEvent e) {
-                estadoAltExclTema();
-                boolean b = e.getValueIsAdjusting();
-                System.out.println(b);
+
+                if (adicTemaList.getList().isSelectionEmpty()) {
+                    estadoAdicTema();
+                } else {
+                    estadoAltExclTema();
+                }
             }
         });
     }
@@ -103,6 +137,8 @@ public class MainFrame extends AbstractFrame {
         altTemaButton = new javax.swing.JButton();
         excTemaButton = new javax.swing.JButton();
         cancelButton = new javax.swing.JButton();
+        jXTitledSeparator1 = new org.jdesktop.swingx.JXTitledSeparator();
+        jXTitledSeparator2 = new org.jdesktop.swingx.JXTitledSeparator();
         jPanel2 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         editorPanel = new javax.swing.JEditorPane();
@@ -110,7 +146,7 @@ public class MainFrame extends AbstractFrame {
         editarTButton = new javax.swing.JToggleButton();
         jXStatusBar1 = new org.jdesktop.swingx.JXStatusBar();
         jLabel1 = new javax.swing.JLabel();
-        jMenuBar1 = new javax.swing.JMenuBar();
+        menuBar = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         jMenu2 = new javax.swing.JMenu();
 
@@ -125,6 +161,8 @@ public class MainFrame extends AbstractFrame {
         jSplitPane1.setName("jSplitPane1"); // NOI18N
 
         jPanel1.setName("jPanel1"); // NOI18N
+
+        adicTemaList.setLabelText("Filtrar: ");
 
         listaComFiltro2.setName("listaComFiltro2"); // NOI18N
 
@@ -163,7 +201,18 @@ public class MainFrame extends AbstractFrame {
         cancelButton.setText("CAN");
         cancelButton.setEnabled(false);
         cancelButton.setName("cancelButton"); // NOI18N
+        cancelButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cancelButtonActionPerformed(evt);
+            }
+        });
         jPanel4.add(cancelButton);
+
+        jXTitledSeparator1.setTitle("Subtema");
+        jXTitledSeparator1.setName("jXTitledSeparator1"); // NOI18N
+
+        jXTitledSeparator2.setTitle("Tema(Assunto Geral)");
+        jXTitledSeparator2.setName("jXTitledSeparator2"); // NOI18N
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -172,21 +221,35 @@ public class MainFrame extends AbstractFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, 229, Short.MAX_VALUE)
-                    .addComponent(adicTemaList, javax.swing.GroupLayout.PREFERRED_SIZE, 223, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(listaComFiltro2, javax.swing.GroupLayout.PREFERRED_SIZE, 213, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap())
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jXTitledSeparator2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 229, Short.MAX_VALUE)
+                            .addComponent(adicTemaList, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 229, Short.MAX_VALUE))
+                        .addContainerGap())
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, 229, Short.MAX_VALUE)
+                        .addContainerGap())
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(jXTitledSeparator1, javax.swing.GroupLayout.DEFAULT_SIZE, 213, Short.MAX_VALUE)
+                        .addGap(26, 26, 26))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                        .addComponent(listaComFiltro2, javax.swing.GroupLayout.DEFAULT_SIZE, 229, Short.MAX_VALUE)
+                        .addContainerGap())))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(24, 24, 24)
-                .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(15, 15, 15)
+                .addComponent(jXTitledSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(adicTemaList, javax.swing.GroupLayout.PREFERRED_SIZE, 143, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 35, Short.MAX_VALUE)
-                .addComponent(listaComFiltro2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(31, 31, 31))
+                .addComponent(adicTemaList, javax.swing.GroupLayout.PREFERRED_SIZE, 142, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(jXTitledSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(listaComFiltro2, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(71, Short.MAX_VALUE))
         );
 
         jSplitPane1.setLeftComponent(jPanel1);
@@ -223,47 +286,67 @@ public class MainFrame extends AbstractFrame {
 
         getContentPane().add(jXStatusBar1, java.awt.BorderLayout.SOUTH);
 
-        jMenuBar1.setName("jMenuBar1"); // NOI18N
+        menuBar.setName("menuBar"); // NOI18N
 
         jMenu1.setText("File");
         jMenu1.setName("jMenu1"); // NOI18N
-        jMenuBar1.add(jMenu1);
+        menuBar.add(jMenu1);
 
         jMenu2.setText("Edit");
         jMenu2.setName("jMenu2"); // NOI18N
-        jMenuBar1.add(jMenu2);
+        menuBar.add(jMenu2);
 
-        setJMenuBar(jMenuBar1);
+        setJMenuBar(menuBar);
 
         java.awt.Dimension screenSize = java.awt.Toolkit.getDefaultToolkit().getScreenSize();
-        setBounds((screenSize.width-742)/2, (screenSize.height-516)/2, 742, 516);
+        setBounds((screenSize.width-742)/2, (screenSize.height-559)/2, 742, 559);
     }// </editor-fold>//GEN-END:initComponents
 
     private void adicTemaButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_adicTemaButtonActionPerformed
-
+        controladorDespacho.setParam(OPER_TEMA, OPER_ADIC_TEMA);//se for para adicionar um tema
         controladorDespacho.despachar(new TemaDialog(this, true));
 
     }//GEN-LAST:event_adicTemaButtonActionPerformed
 
     private void altTemaButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_altTemaButtonActionPerformed
+
         // TODO impl. alteracao de tema
         controladorDespacho.setParam(OBJ_TEMA, adicTemaList.getList().getSelectedValue());
-        controladorDespacho.setParam(OPER_TEMA, 2);//se for alteracao
+        controladorDespacho.setParam(OPER_TEMA, OPER_ALT_TEMA);//se for alteracao
         controladorDespacho.despachar(new TemaDialog(this, true));
+
     }//GEN-LAST:event_altTemaButtonActionPerformed
 
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
+
         try {
             adicTemaList.adicionarItens(temaController.consultaLista(new Tema()));
+            controladorDespacho.setParam(COMP_ADIC_TEMA_JLIST, adicTemaList);
         } catch (Exception ex) {
             controladorDespacho.registraEexibe(ex);
         }
+
     }//GEN-LAST:event_formWindowOpened
 
     private void excTemaButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_excTemaButtonActionPerformed
-        adicTemaList.removerItem(adicTemaList.getItemSelecionado());
-        estadoAdicTema();
+
+        try {
+            if(JMessageUtil.showConfirm("Você tem certeza que deseja deletar este tema:'"
+                    +StringHelper.getFraseStringLimitado(adicTemaList.getItemSelecionado().getTituloTema(),30)+ "'?")==JOptionPane.OK_OPTION){
+                temaController.excluir(adicTemaList.getItemSelecionado());
+                adicTemaList.removerItem(adicTemaList.getItemSelecionado());
+            }
+        } catch (Exception ex) {
+            controladorDespacho.registraEexibe(ex);
+        }
+
     }//GEN-LAST:event_excTemaButtonActionPerformed
+
+    private void cancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelButtonActionPerformed
+
+        adicTemaList.getList().clearSelection();
+
+    }//GEN-LAST:event_cancelButtonActionPerformed
 
     /**
      * @param args the command line arguments
@@ -288,7 +371,6 @@ public class MainFrame extends AbstractFrame {
     private javax.swing.JLabel jLabel1;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
-    private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
@@ -296,6 +378,9 @@ public class MainFrame extends AbstractFrame {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JSplitPane jSplitPane1;
     private org.jdesktop.swingx.JXStatusBar jXStatusBar1;
+    private org.jdesktop.swingx.JXTitledSeparator jXTitledSeparator1;
+    private org.jdesktop.swingx.JXTitledSeparator jXTitledSeparator2;
     private br.com.swing.componentes.personalizados.ui.ListaComFiltro listaComFiltro2;
+    private javax.swing.JMenuBar menuBar;
     // End of variables declaration//GEN-END:variables
 }
