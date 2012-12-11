@@ -8,20 +8,81 @@
  *
  * Created on 15/11/2012, 08:18:14
  */
-
 package br.ajuda.generico.view;
 
-import br.ajuda.generico.jdbc.DaoFactory;
+import br.ajuda.generico.controller.TemaController;
+import br.ajuda.generico.entities.Tema;
 import br.ajuda.generico.util.AbstractFrame;
+import java.awt.Component;
+import javax.swing.DefaultListCellRenderer;
+import javax.swing.JList;
+import javax.swing.ListCellRenderer;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 
 /**
  *
  * @author jacob
  */
-public class MainFrame extends AbstractFrame{
+public class MainFrame extends AbstractFrame {
+
+    public static final String OBJ_TEMA = "tema";
+    public static final String OPER_TEMA = "operacao_tema";
+    private TemaController temaController;
+
     /** Creates new form MainFrame */
     public MainFrame() {
         initComponents();
+        try {
+            temaController = new TemaController();
+        } catch (Exception ex) {
+            controladorDespacho.registraEexibe(ex);
+        }
+        adicTemaList.setCellRenderer(new ListCellRenderer() {
+
+            DefaultListCellRenderer renderer = new DefaultListCellRenderer();
+
+            @Override
+            public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
+                if (value instanceof Tema) {
+                    Tema t = (Tema) value;
+                    return renderer.getListCellRendererComponent(list, t.getTituloTema(), index, isSelected, cellHasFocus);
+                } else {
+                    return renderer.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+                }
+            }
+        });
+
+        adicTemaList.addListSelectionListener(new ListSelectionListener() {
+
+            @Override
+            public void valueChanged(ListSelectionEvent e) {
+                estadoAltExclTema();
+                boolean b = e.getValueIsAdjusting();
+                System.out.println(b);
+            }
+        });
+    }
+
+    public void estadoAdicTema() {
+        adicTemaButton.setEnabled(true);
+        altTemaButton.setEnabled(false);
+        excTemaButton.setEnabled(false);
+        cancelButton.setEnabled(false);
+    }
+
+    public void estadoAltExclTema() {
+        adicTemaButton.setEnabled(false);
+        altTemaButton.setEnabled(true);
+        excTemaButton.setEnabled(true);
+        cancelButton.setEnabled(true);
+    }
+
+    public void estadoExclTema() {
+        adicTemaButton.setEnabled(false);
+        altTemaButton.setEnabled(false);
+        excTemaButton.setEnabled(true);
+        cancelButton.setEnabled(true);
     }
 
     /** This method is called from within the constructor to
@@ -35,12 +96,13 @@ public class MainFrame extends AbstractFrame{
 
         jSplitPane1 = new javax.swing.JSplitPane();
         jPanel1 = new javax.swing.JPanel();
-        adicTemaList = new br.com.swing.componentes.personalizados.ui.ListaComFiltro();
+        adicTemaList = new br.com.swing.componentes.personalizados.ui.ListaComFiltro<Tema>();
         listaComFiltro2 = new br.com.swing.componentes.personalizados.ui.ListaComFiltro();
         jPanel4 = new javax.swing.JPanel();
         adicTemaButton = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
+        altTemaButton = new javax.swing.JButton();
+        excTemaButton = new javax.swing.JButton();
+        cancelButton = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         editorPanel = new javax.swing.JEditorPane();
@@ -53,13 +115,16 @@ public class MainFrame extends AbstractFrame{
         jMenu2 = new javax.swing.JMenu();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowOpened(java.awt.event.WindowEvent evt) {
+                formWindowOpened(evt);
+            }
+        });
 
         jSplitPane1.setDividerLocation(250);
         jSplitPane1.setName("jSplitPane1"); // NOI18N
 
         jPanel1.setName("jPanel1"); // NOI18N
-
-        adicTemaList.setName("adicTemaList"); // NOI18N
 
         listaComFiltro2.setName("listaComFiltro2"); // NOI18N
 
@@ -73,32 +138,32 @@ public class MainFrame extends AbstractFrame{
                 adicTemaButtonActionPerformed(evt);
             }
         });
+        jPanel4.add(adicTemaButton);
 
-        jButton2.setText("ALT");
-        jButton2.setName("jButton2"); // NOI18N
+        altTemaButton.setText("ALT");
+        altTemaButton.setEnabled(false);
+        altTemaButton.setName("altTemaButton"); // NOI18N
+        altTemaButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                altTemaButtonActionPerformed(evt);
+            }
+        });
+        jPanel4.add(altTemaButton);
 
-        jButton3.setText("EXC");
-        jButton3.setName("jButton3"); // NOI18N
+        excTemaButton.setText("EXC");
+        excTemaButton.setEnabled(false);
+        excTemaButton.setName("excTemaButton"); // NOI18N
+        excTemaButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                excTemaButtonActionPerformed(evt);
+            }
+        });
+        jPanel4.add(excTemaButton);
 
-        javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
-        jPanel4.setLayout(jPanel4Layout);
-        jPanel4Layout.setHorizontalGroup(
-            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel4Layout.createSequentialGroup()
-                .addComponent(adicTemaButton)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButton2)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButton3)
-                .addContainerGap(56, Short.MAX_VALUE))
-        );
-        jPanel4Layout.setVerticalGroup(
-            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                .addComponent(adicTemaButton)
-                .addComponent(jButton2)
-                .addComponent(jButton3))
-        );
+        cancelButton.setText("CAN");
+        cancelButton.setEnabled(false);
+        cancelButton.setName("cancelButton"); // NOI18N
+        jPanel4.add(cancelButton);
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -106,22 +171,22 @@ public class MainFrame extends AbstractFrame{
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(listaComFiltro2, javax.swing.GroupLayout.PREFERRED_SIZE, 213, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(adicTemaList, javax.swing.GroupLayout.DEFAULT_SIZE, 223, Short.MAX_VALUE)
-                    .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap(16, Short.MAX_VALUE))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, 229, Short.MAX_VALUE)
+                    .addComponent(adicTemaList, javax.swing.GroupLayout.PREFERRED_SIZE, 223, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(listaComFiltro2, javax.swing.GroupLayout.PREFERRED_SIZE, 213, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(24, 24, 24)
-                .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(adicTemaList, javax.swing.GroupLayout.PREFERRED_SIZE, 143, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(72, 72, 72)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 35, Short.MAX_VALUE)
                 .addComponent(listaComFiltro2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(31, 31, 31))
         );
 
         jSplitPane1.setLeftComponent(jPanel1);
@@ -177,28 +242,49 @@ public class MainFrame extends AbstractFrame{
     private void adicTemaButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_adicTemaButtonActionPerformed
 
         controladorDespacho.despachar(new TemaDialog(this, true));
-        
+
     }//GEN-LAST:event_adicTemaButtonActionPerformed
 
+    private void altTemaButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_altTemaButtonActionPerformed
+        // TODO impl. alteracao de tema
+        controladorDespacho.setParam(OBJ_TEMA, adicTemaList.getList().getSelectedValue());
+        controladorDespacho.setParam(OPER_TEMA, 2);//se for alteracao
+        controladorDespacho.despachar(new TemaDialog(this, true));
+    }//GEN-LAST:event_altTemaButtonActionPerformed
+
+    private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
+        try {
+            adicTemaList.adicionarItens(temaController.consultaLista(new Tema()));
+        } catch (Exception ex) {
+            controladorDespacho.registraEexibe(ex);
+        }
+    }//GEN-LAST:event_formWindowOpened
+
+    private void excTemaButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_excTemaButtonActionPerformed
+        adicTemaList.removerItem(adicTemaList.getItemSelecionado());
+        estadoAdicTema();
+    }//GEN-LAST:event_excTemaButtonActionPerformed
+
     /**
-    * @param args the command line arguments
-    */
+     * @param args the command line arguments
+     */
     public static void main(String args[]) {
         java.awt.EventQueue.invokeLater(new Runnable() {
+
             @Override
             public void run() {
                 new MainFrame().setVisible(true);
             }
         });
     }
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton adicTemaButton;
-    private br.com.swing.componentes.personalizados.ui.ListaComFiltro adicTemaList;
+    private br.com.swing.componentes.personalizados.ui.ListaComFiltro<Tema> adicTemaList;
+    private javax.swing.JButton altTemaButton;
+    private javax.swing.JButton cancelButton;
     private javax.swing.JToggleButton editarTButton;
     private javax.swing.JEditorPane editorPanel;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
+    private javax.swing.JButton excTemaButton;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
@@ -212,5 +298,4 @@ public class MainFrame extends AbstractFrame{
     private org.jdesktop.swingx.JXStatusBar jXStatusBar1;
     private br.com.swing.componentes.personalizados.ui.ListaComFiltro listaComFiltro2;
     // End of variables declaration//GEN-END:variables
-
 }

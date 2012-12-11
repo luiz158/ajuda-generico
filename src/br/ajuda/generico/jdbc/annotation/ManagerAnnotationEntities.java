@@ -41,7 +41,7 @@ public class ManagerAnnotationEntities {
             for (Annotation annotation : annotations) {
                 if (annotation instanceof Tabela) {
                     Tabela tabela = (Tabela) annotation;
-                    String prefixoSchema = tabela.schema().equals("") ? tabela.schema() + "." : "";
+                    String prefixoSchema = !tabela.schema().equals("") ? tabela.schema() + "." : "";
                     return prefixoSchema + tabela.nome();
                 }
             }
@@ -95,6 +95,36 @@ public class ManagerAnnotationEntities {
             }
         }
         return nomeCamposMap;
+    }
+
+    public <T> IMapa<String, Object> getConverterBeanParaMap(T bean) {
+        return getCBPMap(bean, false);
+    }
+
+    public <T> IMapa<String, Object> getConverterBeanParaMapIds(T bean) {
+        return getCBPMap(bean, true);
+    }
+
+    private <T> IMapa<String, Object> getCBPMap(T bean, boolean flag) {
+        //TODO se caso nao for preenchido o campo 'nome' da interface CampoBD, considerar o nome do atributo como 'nome'
+        IMapa<String, Object> beanMap = new Mapa();
+        Field[] campos = bean.getClass().getDeclaredFields();
+        for (Field field : campos) {
+            if (field.isAnnotationPresent(Id.class) && flag) {
+                field.setAccessible(true);
+                CampoBD campoBD = field.getAnnotation(CampoBD.class);
+                Object valor = BeanHelper.getPropriedade(bean, field.getName());
+                beanMap.adicionar(campoBD.nome(), valor);
+                continue;
+            }
+            if (field.isAnnotationPresent(CampoBD.class)) {
+                field.setAccessible(true);
+                CampoBD campoBD = field.getAnnotation(CampoBD.class);
+                Object valor = BeanHelper.getPropriedade(bean, field.getName());
+                beanMap.adicionar(campoBD.nome(), valor);
+            }
+        }
+        return beanMap;
     }
 
     /**

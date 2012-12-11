@@ -7,6 +7,9 @@
   <SyntheticProperties>
     <SyntheticProperty name="formSizePolicy" type="int" value="1"/>
   </SyntheticProperties>
+  <Events>
+    <EventHandler event="windowOpened" listener="java.awt.event.WindowListener" parameters="java.awt.event.WindowEvent" handler="formWindowOpened"/>
+  </Events>
   <AuxValues>
     <AuxValue name="FormSettings_autoResourcing" type="java.lang.Integer" value="0"/>
     <AuxValue name="FormSettings_autoSetComponentName" type="java.lang.Boolean" value="true"/>
@@ -91,14 +94,11 @@
                 <Component class="javax.swing.JTextArea" name="descTArea">
                   <Properties>
                     <Property name="columns" type="int" value="20"/>
+                    <Property name="lineWrap" type="boolean" value="true"/>
                     <Property name="rows" type="int" value="7"/>
+                    <Property name="wrapStyleWord" type="boolean" value="true"/>
                     <Property name="name" type="java.lang.String" value="descricaoTema" noResource="true"/>
                   </Properties>
-                  <BindingProperties>
-                    <BindingProperty name="text" source="descTArea" sourcePath="${text}" target="descTArea" targetPath="text" updateStrategy="0" immediately="false">
-                      <BindingParameter name="javax.swing.binding.ParameterKeys.TEXT_CHANGE_STRATEGY" value="javax.swing.binding.TextChangeStrategy.ON_TYPE"/>
-                    </BindingProperty>
-                  </BindingProperties>
                 </Component>
               </SubComponents>
             </Container>
@@ -153,6 +153,9 @@
             <Property name="text" type="java.lang.String" value="Cancelar"/>
             <Property name="name" type="java.lang.String" value="cancelButton" noResource="true"/>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="cancelButtonActionPerformed"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JButton" name="adicButton">
           <Properties>

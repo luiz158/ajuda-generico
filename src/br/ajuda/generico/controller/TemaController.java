@@ -19,7 +19,9 @@ package br.ajuda.generico.controller;
 import br.ajuda.generico.dao.ITemaDao;
 import br.ajuda.generico.entities.Tema;
 import br.ajuda.generico.jdbc.DaoFactory;
+import br.ajuda.generico.jdbc.annotation.ManagerAnnotationEntities;
 import br.ajuda.generico.util.CrudController;
+import br.ajuda.generico.util.SqlUtil;
 import java.util.List;
 
 /**
@@ -29,14 +31,16 @@ import java.util.List;
 public class TemaController implements CrudController<Tema> {
 
     private DaoFactory daoFactory;
-
-    public TemaController() {
+    private ITemaDao temaDao;
+    ManagerAnnotationEntities managerAnnotationEntities;
+    public TemaController() throws Exception {
         daoFactory = DaoFactory.getDaoFactory();
+        temaDao = daoFactory.getTemaDao();
+        managerAnnotationEntities = new ManagerAnnotationEntities();
     }
 
     @Override
-    public Tema salvar(Tema tema) throws Exception {
-        ITemaDao temaDao = daoFactory.getTemaDao();        
+    public Tema salvar(Tema tema) throws Exception {        
         temaDao.savePrepare(tema);
         temaDao.commit();
         return tema;
@@ -54,11 +58,13 @@ public class TemaController implements CrudController<Tema> {
 
     @Override
     public Tema consultaUnicoRetorno(Tema bean) throws Exception {
-        throw new UnsupportedOperationException("Not supported yet.");
+        Tema tema =temaDao.prepareQueryReturnSingleBean(bean);
+        temaDao.commit();
+        return tema;
     }
 
     @Override
     public List<Tema> consultaLista(Tema bean) throws Exception {
-        throw new UnsupportedOperationException("Not supported yet.");
+        return SqlUtil.parseListMapToListBean(temaDao.cexecuteQuery("SELECT * FROM "+managerAnnotationEntities.getNomeTabela(bean)),Tema.class);
     }
 }

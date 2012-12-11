@@ -4,6 +4,10 @@
  */
 package testes;
 
+import br.ajuda.generico.dao.ITemaDao;
+import br.ajuda.generico.entities.Tema;
+import br.ajuda.generico.jdbc.DaoFactory;
+
 /**
  *
  * @author jacob
@@ -32,14 +36,11 @@ public class TesteHSQLDB {
 //
 //        conn.close();
 
-//        DaoFactory daoFactory = DaoFactory.getDaoFactory(true, DaoFactory.HSQLDB);
-//        Tema tema = daoFactory.executeQueryReturnSingleBean("select * from public.ag_tema where id_tema=6", Tema.class);
-//        //Tema tema = new Tema();
-//        tema.setDescricaoTema("alterando2...");
-//
-//        daoFactory.updatePrepare(tema);
-//
-//        daoFactory.commit();
-//        daoFactory.disconnection();
+        DaoFactory daoFactory = DaoFactory.getDaoFactory();
+        ITemaDao temaDao = daoFactory.getTemaDao();
+        Tema tema = temaDao.prepareQueryReturnSingleBean(new Tema(2L,"my girls"));
+        System.out.println(tema);
+        temaDao.commit();
+        temaDao.disconnection();
     }
 }

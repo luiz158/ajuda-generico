@@ -22,6 +22,10 @@ public interface GenericDao<T> extends Serializable {
 
     public abstract T executeQueryReturnSingleBean(String sql, Class<? extends T> typeClass) throws Exception;
 
+    public abstract T prepareQueryReturnSingleBean(T bean) throws Exception;
+
+    public abstract T prepareQueryPorIdsReturnSingleBean(T bean) throws Exception;
+
     public abstract List cexecuteQuery(String sql) throws Exception;
 
     public abstract void savePrepare(T bean) throws Exception;

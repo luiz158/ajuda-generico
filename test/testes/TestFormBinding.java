@@ -42,38 +42,38 @@ public class TestFormBinding extends javax.swing.JFrame {
     /** Creates new form TestFormBinding */
     public TestFormBinding() {
         initComponents();
-        Bindings.adicLigacao(nomeTField, "text", String.class);
-        Bindings.adicLigacao(dataAniverTField, "text", Date.class);
-        Bindings.adicLigacao(salarioTField, "text", Double.class);
-        Bindings.adicLigacao(nArquivosTField, "text", Long.class);
-        Bindings.adicLigacao(idadeTField, "text", Integer.class);
-        Bindings.adicLigacao(shortTField, "text", Short.class);
-        Bindings.adicLigacao(fmCBox, "selected", Boolean.class);
-        Bindings.adicLigacao(totalTField, "text", BigDecimal.class,new ConversorComponente() {
-
-            @Override
-            public Object converterParaObjeto(Component componente, Object valor) throws Exception {
-                if(valor ==null){
-                    return valor;
-                }
-                String source = StringHelper.valueOf(valor);
-                if(StringHelper.isBlank(source)){
-                    return null;
-                }
-                String tmp = source.replaceAll(",", "").replaceAll("\\.", "");
-                if(!NumberHelper.isNumber(tmp)){
-                   throw new NumberFormatException("O valor informado:'"+source
-                           + "', esta em um formato inválido! "
-                           + "Usar este formato,exemplo: 1.200,00 ou 50,00");
-                }
-                return new BigDecimal(String.valueOf(NumberHelper.newDecimalFormatCustom().parse(source)));
-            }
-
-            @Override
-            public Object converterParaComponente(Component componente, Object bean) throws Exception {
-                throw new UnsupportedOperationException("Not supported yet.");
-            }
-        });
+//        Bindings.adicLigacao(nomeTField, "text", String.class);
+//        Bindings.adicLigacao(dataAniverTField, "text", Date.class);
+//        Bindings.adicLigacao(salarioTField, "text", Double.class);
+//        Bindings.adicLigacao(nArquivosTField, "text", Long.class);
+//        Bindings.adicLigacao(idadeTField, "text", Integer.class);
+//        Bindings.adicLigacao(shortTField, "text", Short.class);
+//        Bindings.adicLigacao(fmCBox, "selected", Boolean.class);
+//        Bindings.adicLigacao(totalTField, "text", BigDecimal.class,new ConversorComponente() {
+//
+//            @Override
+//            public Object converterParaObjeto(Component componente, Object valor) throws Exception {
+//                if(valor ==null){
+//                    return valor;
+//                }
+//                String source = StringHelper.valueOf(valor);
+//                if(StringHelper.isBlank(source)){
+//                    return null;
+//                }
+//                String tmp = source.replaceAll(",", "").replaceAll("\\.", "");
+//                if(!NumberHelper.isNumber(tmp)){
+//                   throw new NumberFormatException("O valor informado:'"+source
+//                           + "', esta em um formato inválido! "
+//                           + "Usar este formato,exemplo: 1.200,00 ou 50,00");
+//                }
+//                return new BigDecimal(String.valueOf(NumberHelper.newDecimalFormatCustom().parse(source)));
+//            }
+//
+//            @Override
+//            public Object converterParaComponente(Component componente, Object bean) throws Exception {
+//                throw new UnsupportedOperationException("Not supported yet.");
+//            }
+//        });
         
     }
 
@@ -97,6 +97,8 @@ public class TestFormBinding extends javax.swing.JFrame {
         shortTField = new javax.swing.JTextField();
         fmCBox = new javax.swing.JCheckBox();
         totalTField = new javax.swing.JTextField();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        jList1 = new javax.swing.JList();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -132,6 +134,21 @@ public class TestFormBinding extends javax.swing.JFrame {
         totalTField.setText("total");
         totalTField.setName("total"); // NOI18N
 
+        jScrollPane1.setName("jScrollPane1"); // NOI18N
+
+        jList1.setModel(new javax.swing.AbstractListModel() {
+            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
+            public int getSize() { return strings.length; }
+            public Object getElementAt(int i) { return strings[i]; }
+        });
+        jList1.setName("jList1"); // NOI18N
+        jList1.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
+            public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
+                jList1ValueChanged(evt);
+            }
+        });
+        jScrollPane1.setViewportView(jList1);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -152,13 +169,18 @@ public class TestFormBinding extends javax.swing.JFrame {
                                 .addComponent(totalTField, javax.swing.GroupLayout.Alignment.LEADING))))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(106, 106, 106)
-                        .addComponent(jButton1)))
-                .addContainerGap(170, Short.MAX_VALUE))
+                        .addComponent(jButton1))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(111, 111, 111)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(259, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(49, 49, 49)
+                .addGap(27, 27, 27)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(66, 66, 66)
                 .addComponent(nomeTField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(4, 4, 4)
                 .addComponent(dataAniverTField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -193,6 +215,10 @@ public class TestFormBinding extends javax.swing.JFrame {
 
     }//GEN-LAST:event_jButton1ActionPerformed
 
+    private void jList1ValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_jList1ValueChanged
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jList1ValueChanged
+
     /**
     * @param args the command line arguments
     */
@@ -211,6 +237,8 @@ public class TestFormBinding extends javax.swing.JFrame {
     private javax.swing.JCheckBox fmCBox;
     private javax.swing.JTextField idadeTField;
     private javax.swing.JButton jButton1;
+    private javax.swing.JList jList1;
+    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTextField nArquivosTField;
     private javax.swing.JTextField nomeTField;
     private javax.swing.JTextField salarioTField;

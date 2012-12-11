@@ -26,7 +26,6 @@ import java.util.Date;
  */
 public class TestPessoa implements Serializable{
     private static final long serialVersionUID = -5136997122865439981L;
-
     private String nome;
     private Date dataAniver;
     private Double salario;
@@ -49,8 +48,8 @@ public class TestPessoa implements Serializable{
     /**
      * @param nome the nome to set
      */
-    public void setNome(String nome) {
-        this.nome = nome;
+    public void setNome(String nome) {        
+        this.nome = nome;        
     }
 
     @Override

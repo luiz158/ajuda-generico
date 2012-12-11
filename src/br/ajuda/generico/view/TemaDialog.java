@@ -35,14 +35,18 @@ import br.ajuda.generico.util.JMessageUtil;
 public class TemaDialog extends AbstractDialog {
 
     private TemaController temaController;
-
+    
     /** Creates new form TemaDialog */
     public TemaDialog(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
-        temaController = new TemaController();
-        Bindings.adicLigacao(tituloTField, "text", String.class);
-        Bindings.adicLigacao(descTArea, "text", String.class);
+        try {
+            temaController = new TemaController();
+        } catch (Exception ex) {
+            controladorDespacho.registraEexibe(ex);
+        }
+        Bindings.adicLigacao(tituloTField, "text",null, String.class);
+        Bindings.adicLigacao(descTArea, "text",null, String.class);
     }
 
     /** This method is called from within the constructor to
@@ -54,7 +58,6 @@ public class TemaDialog extends AbstractDialog {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
         java.awt.GridBagConstraints gridBagConstraints;
-        bindingGroup = new org.jdesktop.beansbinding.BindingGroup();
 
         jPanel2 = new javax.swing.JPanel();
         jPanel1 = new javax.swing.JPanel();
@@ -70,6 +73,11 @@ public class TemaDialog extends AbstractDialog {
         adicButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowOpened(java.awt.event.WindowEvent evt) {
+                formWindowOpened(evt);
+            }
+        });
 
         jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
         jPanel2.setName("jPanel2"); // NOI18N
@@ -85,12 +93,10 @@ public class TemaDialog extends AbstractDialog {
         jScrollPane1.setName("jScrollPane1"); // NOI18N
 
         descTArea.setColumns(20);
+        descTArea.setLineWrap(true);
         descTArea.setRows(7);
+        descTArea.setWrapStyleWord(true);
         descTArea.setName("descricaoTema"); // NOI18N
-
-        org.jdesktop.beansbinding.Binding binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, descTArea, org.jdesktop.beansbinding.ELProperty.create("${text}"), descTArea, org.jdesktop.beansbinding.BeanProperty.create("text"));
-        bindingGroup.addBinding(binding);
-
         jScrollPane1.setViewportView(descTArea);
 
         jPanel1.add(jScrollPane1);
@@ -125,6 +131,11 @@ public class TemaDialog extends AbstractDialog {
 
         cancelButton.setText("Cancelar");
         cancelButton.setName("cancelButton"); // NOI18N
+        cancelButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cancelButtonActionPerformed(evt);
+            }
+        });
         jPanel3.add(cancelButton);
 
         adicButton.setText("Adicionar");
@@ -160,24 +171,43 @@ public class TemaDialog extends AbstractDialog {
                 .addContainerGap(31, Short.MAX_VALUE))
         );
 
-        bindingGroup.bind();
-
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void adicButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_adicButtonActionPerformed
         //TODO terminar a implementacao do cadastro de tema
         try {
+            adicButton.setEnabled(false);
             // TODO impl. adic. tema
             Tema tema = new Tema();
             Bindings.analisarBean(tema);
             temaController.salvar(tema);            
             JMessageUtil.showSucessMessage(this, "Tema inserido com sucesso!");
+            Bindings.limpar(Tema.class);
+            adicButton.setEnabled(true);
+            tituloTField.setRequestFocusEnabled(true);
         } catch (Exception ex) {
             this.controladorDespacho.registraEexibe(ex);
         }
 
     }//GEN-LAST:event_adicButtonActionPerformed
+
+    private void cancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelButtonActionPerformed
+        
+        dispose();
+    }//GEN-LAST:event_cancelButtonActionPerformed
+
+    private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
+        if(controladorDespacho.getParam(MainFrame.OPER_TEMA)!=null
+                &&controladorDespacho.getParam(MainFrame.OPER_TEMA).equals(1)){
+            try {
+                Tema tema = temaController.consultaUnicoRetorno((Tema) controladorDespacho.getParam(MainFrame.OBJ_TEMA));
+                System.out.println(tema);
+            } catch (Exception ex) {
+                controladorDespacho.registraEexibe(ex);
+            }
+        }
+    }//GEN-LAST:event_formWindowOpened
 
     /**
      * @param args the command line arguments
@@ -212,6 +242,5 @@ public class TemaDialog extends AbstractDialog {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JTextField tituloTField;
-    private org.jdesktop.beansbinding.BindingGroup bindingGroup;
     // End of variables declaration//GEN-END:variables
 }

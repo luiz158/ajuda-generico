@@ -33,21 +33,20 @@ public class BeanComposicaoBinding<C> implements Serializable{
     private Class<?> tipoClasseComp;
     //conversor de entrada/saida 
     private ConversorComponente conversorComponente;
+    //valor default original do componente
+    private Object valorDefault;
 
     public BeanComposicaoBinding() {
     }
 
-    public BeanComposicaoBinding(C componente, String nomeMetodo, Class<?> tipoClasseComp) {
-        this.componente = componente;
-        this.nomeMetodo = nomeMetodo;
-        this.tipoClasseComp = tipoClasseComp;
-    }
 
-    public BeanComposicaoBinding(C componente, String nomeMetodo, Class<?> tipoClasseComp, ConversorComponente conversorComponente) {
+
+    public BeanComposicaoBinding(C componente, String nomeMetodo, Class<?> tipoClasseComp,Object valorDefault, ConversorComponente conversorComponente) {
         this.componente = componente;
         this.nomeMetodo = nomeMetodo;
         this.tipoClasseComp = tipoClasseComp;
         this.conversorComponente = conversorComponente;
+        this.valorDefault = valorDefault;
     }
 
     /**
@@ -134,6 +133,20 @@ public class BeanComposicaoBinding<C> implements Serializable{
      */
     public void setConversorComponente(ConversorComponente conversorComponente) {
         this.conversorComponente = conversorComponente;
+    }
+
+    /**
+     * @return the valorDefault
+     */
+    public Object getValorDefault() {
+        return valorDefault;
+    }
+
+    /**
+     * @param valorDefault the valorDefault to set
+     */
+    public void setValorDefault(Object valorDefault) {
+        this.valorDefault = valorDefault;
     }
 
 }

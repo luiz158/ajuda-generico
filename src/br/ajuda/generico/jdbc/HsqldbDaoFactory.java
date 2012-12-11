@@ -110,6 +110,66 @@ public class HsqldbDaoFactory<T> implements GenericDao<T> {
     }
 
     @Override
+    public T prepareQueryReturnSingleBean(T bean) throws Exception {
+        return pQueryReturnSingleBean(bean, false);
+    }
+
+    @Override
+    public T prepareQueryPorIdsReturnSingleBean(T bean) throws Exception {
+        return pQueryReturnSingleBean(bean, true);
+    }
+
+    private T pQueryReturnSingleBean(T bean, boolean flag) throws Exception {
+        StringBuilder sql = new StringBuilder("SELECT * FROM " + managerAnnotationEntities.getNomeTabela(bean));
+
+        IMapa camposMap = flag ? managerAnnotationEntities.getConverterBeanParaMapIds(bean) : managerAnnotationEntities.getConverterBeanParaMap(bean);
+
+        StringBuilder camposStr = new StringBuilder();
+
+        List<Pares> pares = camposMap.list();
+        for (Pares par : pares) {
+            Object v =camposMap.getValue(par.getKey());
+            if (v != null) {
+                if(v instanceof String){
+                    camposStr.append(par.getKey()).append("=lower(?) AND ");
+                }else{
+                    camposStr.append(par.getKey()).append("=? AND ");
+                }
+            }
+        }
+
+        sql.append(" WHERE ").append(StringHelper.substringBeforeLast(camposStr.toString(), "AND"));
+
+        cps = getConnection().prepareStatement(sql.toString());
+
+        IMapa somenteCamposMap = flag ? managerAnnotationEntities.getIdsCampos(bean) : managerAnnotationEntities.getCampos(bean);
+        setCamposPrepareQuery(somenteCamposMap, bean);
+
+        ResultSet resultSet = cps.executeQuery();
+        Map<String, Object> beanMap = new HashMap<String, Object>();
+        if (resultSet.next()) {
+            ResultSetMetaData rsmd = resultSet.getMetaData();
+            int nCols = rsmd.getColumnCount();
+            for (int i = 1; i <= nCols; i++) {
+                String colName = rsmd.getColumnName(i);
+
+                Object value = resultSet.getObject(colName);
+
+                beanMap.put(SqlUtil.getNameAttributeBean(colName), value);
+            }
+        } else {
+            if (resultSet != null) {
+                resultSet.close();
+            }
+            return null;
+        }
+
+        resultSet.close();
+
+        return (T) BeanHelper.parseMapToBean(beanMap, bean.getClass());
+    }
+
+    @Override
     public List cexecuteQuery(String sql) throws Exception {
         st = getConnection().createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
         List lista = new ArrayList();
@@ -504,5 +564,37 @@ public class HsqldbDaoFactory<T> implements GenericDao<T> {
     public int hashCode() {
         int hash = 7;
         return hash;
+    }
+
+    private void setCamposPrepareQuery(IMapa map, T bean) throws SQLException {
+        Iterator<String> keys = map.keys();
+        int pCampo = 1;
+
+        while (keys.hasNext()) {
+            String key = keys.next();
+            Object value = BeanHelper.getPropriedade(bean, (String) map.getValue(key));
+            if (value == null) {
+                continue;
+            }
+            if (value instanceof BigDecimal) {
+                cps.setBigDecimal(pCampo++, (BigDecimal) value);
+            } else if (value instanceof Date) {
+                cps.setDate(pCampo++, new java.sql.Date(((Date) value).getTime()));
+            } else if (value instanceof Double) {
+                cps.setDouble(pCampo++, ((Double) value).doubleValue());
+            } else if (value instanceof Integer) {
+                cps.setInt(pCampo++, ((Integer) value).intValue());
+            } else if (value instanceof String) {
+                cps.setString(pCampo++, ((String) value).toLowerCase());
+            } else if (value instanceof Long) {
+                cps.setLong(pCampo++, ((Long) value).longValue());
+            } else if (value instanceof Short) {
+                cps.setShort(pCampo++, ((Short) value).shortValue());
+            } else if (value instanceof Boolean) {
+                cps.setBoolean(pCampo++, (Boolean) value);
+            } else {
+                cps.setObject(pCampo++, value);
+            }
+        }
     }
 }

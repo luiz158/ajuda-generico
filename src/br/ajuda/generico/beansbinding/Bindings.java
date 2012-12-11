@@ -25,9 +25,11 @@ import br.ajuda.generico.beansbinding.conversores.ConversorInteger;
 import br.ajuda.generico.beansbinding.conversores.ConversorLong;
 import br.ajuda.generico.beansbinding.conversores.ConversorShort;
 import br.ajuda.generico.beansbinding.conversores.ConversorString;
+import br.ajuda.generico.entities.Tema;
 import br.ajuda.generico.util.BeanHelper;
 import br.ajuda.generico.util.StringHelper;
 import java.awt.Component;
+import java.lang.reflect.Field;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -54,10 +56,11 @@ public class Bindings {
      * e o tipo do objeto requerido.
      * @param componente componente a ser feito a ligação.
      * @param nomeMetodo nome do metodo a ser chamado do componente fornecido
+     * @param valorDefault valor default original do componente
      * @param tipoClasseComp tipo da classe requerida para conversão do valor do componente.
      */
-    public static void adicLigacao(Component componente, String nomeMetodo, Class<?> tipoClasseComp) {
-        aL(componente, nomeMetodo, tipoClasseComp, null);
+    public static void adicLigacao(Component componente, String nomeMetodo, Object valorDefault, Class<?> tipoClasseComp) {
+        aL(componente, nomeMetodo, valorDefault, tipoClasseComp, null);
     }
 
     /**
@@ -65,15 +68,16 @@ public class Bindings {
      * podendo tambem fornecer uma implementação do conversor e o tipo do objeto requerido.
      * @param componente componente a ser feito a ligação.
      * @param nomeMetodo nome do metodo a ser chamado do componente fornecido
+     * @param valorDefault valor default original do componente
      * @param tipoClasseComp tipo da classe requerida para conversão do valor do componente.
      * @param conversorComponente personalisar o conversor
      */
-    public static void adicLigacao(Component componente, String nomeMetodo, Class<?> tipoClasseComp, ConversorComponente conversorComponente) {
-        aL(componente, nomeMetodo, tipoClasseComp, conversorComponente);
+    public static void adicLigacao(Component componente, String nomeMetodo, Object valorDefault, Class<?> tipoClasseComp, ConversorComponente conversorComponente) {
+        aL(componente, nomeMetodo, valorDefault, tipoClasseComp, conversorComponente);
     }
 
-    private static void aL(Component componente, String nomeMetodo, Class<?> tipoClasseComp, ConversorComponente conversorComponente) {
-        beansBindings.add(new BeanComposicaoBinding(componente, nomeMetodo, tipoClasseComp, conversorComponente));
+    private static void aL(Component componente, String nomeMetodo, Object valorDefault, Class<?> tipoClasseComp, ConversorComponente conversorComponente) {
+        beansBindings.add(new BeanComposicaoBinding(componente, nomeMetodo, tipoClasseComp, valorDefault, conversorComponente));
     }
 
     /**
@@ -247,6 +251,28 @@ public class Bindings {
                 }
             } else {
                 BeanHelper.setPropriedade(bean, valor, comp.getName());
+            }
+        }
+    }
+
+    /**
+     * limpa todos os componentes ligados a cada nome do atributo do bean.
+     * @param <C> tipo generico do componente
+     * @param classe
+     */
+    public static <C> void limpar(Class classe) {
+        Field[] campos = classe.getDeclaredFields();
+        for (Field campo : campos) {
+            campo.setAccessible(true);
+
+            for (BeanComposicaoBinding beanBinding : beansBindings) {
+                C objGenericoComp = (C) beanBinding.getComponente();
+                Component comp = (Component) beanBinding.getComponente();
+                if (campo.getName().equals(comp.getName())) {
+                    BeanHelper.setPropriedade(objGenericoComp, beanBinding.getValorDefault(), beanBinding.getNomeMetodo());
+                    break;
+                }
+
             }
         }
     }
