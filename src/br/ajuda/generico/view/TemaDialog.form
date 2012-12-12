@@ -102,7 +102,7 @@
                     <Property name="lineWrap" type="boolean" value="true"/>
                     <Property name="rows" type="int" value="7"/>
                     <Property name="wrapStyleWord" type="boolean" value="true"/>
-                    <Property name="name" type="java.lang.String" value="descricaoTema" noResource="true"/>
+                    <Property name="name" type="java.lang.String" value="descricao" noResource="true"/>
                   </Properties>
                 </Component>
               </SubComponents>
@@ -132,7 +132,7 @@
             </Component>
             <Component class="javax.swing.JTextField" name="tituloTField">
               <Properties>
-                <Property name="name" type="java.lang.String" value="tituloTema" noResource="true"/>
+                <Property name="name" type="java.lang.String" value="titulo" noResource="true"/>
               </Properties>
             </Component>
           </SubComponents>

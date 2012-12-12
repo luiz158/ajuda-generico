@@ -57,7 +57,7 @@ public class TemaController extends AbstractController implements CrudController
                 + managerAnnotationEntities.getNomeTabela(tema)
                 + " WHERE " + "id_tema=?");
         tema = temaDao.prepareQueryPorIdsReturnSingleBean(tema);
-        p.setLong(1, tema.getIdTema());
+        p.setLong(1, tema.getId());
         p.execute();
         temaDao.commit();
         return tema;

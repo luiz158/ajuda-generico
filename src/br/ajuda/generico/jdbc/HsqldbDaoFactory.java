@@ -6,9 +6,9 @@ package br.ajuda.generico.jdbc;
 
 import br.ajuda.generico.dao.GenericDao;
 import br.ajuda.generico.jdbc.annotation.ManagerAnnotationEntities;
+import br.ajuda.generico.util.BeanHelper;
 import br.ajuda.generico.util.SqlUtil;
 import br.com.jacob.util.AbstractMapa.Pares;
-import br.com.jacob.util.BeanHelper;
 import br.com.jacob.util.IMapa;
 import br.com.jacob.util.StringHelper;
 import java.math.BigDecimal;

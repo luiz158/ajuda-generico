@@ -15,7 +15,7 @@ import java.lang.annotation.Target;
  * @author jacob
  */
 @Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.FIELD)
+@Target(value={ElementType.FIELD,ElementType.METHOD})
 public @interface CampoBD {
     public String nome() default "";
     public boolean obrigatorio() default false;

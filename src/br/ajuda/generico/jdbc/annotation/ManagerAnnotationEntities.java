@@ -4,9 +4,9 @@
  */
 package br.ajuda.generico.jdbc.annotation;
 
+import br.ajuda.generico.util.BeanHelper;
 import br.ajuda.generico.util.LogSis;
 import br.ajuda.generico.util.NumberHelper;
-import br.com.jacob.util.BeanHelper;
 import br.com.jacob.util.CollectionsUtil;
 import br.com.jacob.util.IMapa;
 import br.com.jacob.util.Mapa;
@@ -83,7 +83,7 @@ public class ManagerAnnotationEntities {
     private <T> IMapa<String, String> getCampos(T bean, boolean flag) {
         //TODO se caso nao for preenchido o campo 'nome' da interface CampoBD, considerar o nome do atributo como 'nome'
         IMapa<String, String> nomeCamposMap = new Mapa();
-        Field[] campos = bean.getClass().getDeclaredFields();
+        Field[] campos = BeanHelper.getAllFields(bean.getClass());
         for (Field field : campos) {
             if (field.isAnnotationPresent(Id.class) && flag) {
                 continue;
@@ -108,7 +108,7 @@ public class ManagerAnnotationEntities {
     private <T> IMapa<String, Object> getCBPMap(T bean, boolean flag) {
         //TODO se caso nao for preenchido o campo 'nome' da interface CampoBD, considerar o nome do atributo como 'nome'
         IMapa<String, Object> beanMap = new Mapa();
-        Field[] campos = bean.getClass().getDeclaredFields();
+        Field[] campos = BeanHelper.getAllFields(bean.getClass());
         for (Field field : campos) {
             if (field.isAnnotationPresent(Id.class) && flag) {
                 field.setAccessible(true);
@@ -135,7 +135,7 @@ public class ManagerAnnotationEntities {
      */
     public <T> IMapa<String, String> getIdsCampos(T bean) {
         IMapa<String, String> idsCamposMap = new Mapa();
-        Field[] campos = bean.getClass().getDeclaredFields();
+        Field[] campos = BeanHelper.getAllFields(bean.getClass());
         for (Field field : campos) {
             if (field.isAnnotationPresent(CampoBD.class) && field.isAnnotationPresent(Id.class)) {
                 field.setAccessible(true);
@@ -162,7 +162,7 @@ public class ManagerAnnotationEntities {
         //inicializando indice com 1
         beanMap.setIndex(1);
         Class clazz = bean.getClass();
-        Field[] fields = clazz.getDeclaredFields();
+        Field[] fields = BeanHelper.getAllFields(clazz);
         for (Field field : fields) {
             if (field.isAnnotationPresent(Transitorio.class) && flag1) {
                 continue;
@@ -203,7 +203,7 @@ public class ManagerAnnotationEntities {
     public void analisarCamposObrig(Object entidade) throws CampoObrigException {
         CampoBD campo = null;
         CampoObrigException camposEx = new CampoObrigException();
-        Field[] fields = entidade.getClass().getDeclaredFields();
+        Field[] fields = BeanHelper.getAllFields(entidade.getClass());
         for (Field field : fields) {
             if (field.isAnnotationPresent(CampoBD.class)) {
                 field.setAccessible(true);

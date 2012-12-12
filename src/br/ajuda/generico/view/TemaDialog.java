@@ -98,7 +98,7 @@ public class TemaDialog extends AbstractDialog {
         descTArea.setLineWrap(true);
         descTArea.setRows(7);
         descTArea.setWrapStyleWord(true);
-        descTArea.setName("descricaoTema"); // NOI18N
+        descTArea.setName("descricao"); // NOI18N
         jScrollPane1.setViewportView(descTArea);
 
         jPanel1.add(jScrollPane1);
@@ -119,7 +119,7 @@ public class TemaDialog extends AbstractDialog {
         jLabel2.setPreferredSize(new java.awt.Dimension(50, 14));
         jPanel4.add(jLabel2);
 
-        tituloTField.setName("tituloTema"); // NOI18N
+        tituloTField.setName("titulo"); // NOI18N
         jPanel4.add(tituloTField);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -192,7 +192,7 @@ public class TemaDialog extends AbstractDialog {
                 //adiciono o tema na lista da janela principal
                 ((ListaComFiltro<Tema>) controladorDespacho.getParam(MainFrame.COMP_ADIC_TEMA_JLIST)).adicionarItem(tema);
                 JMessageUtil.showSucessMessage(this, "Tema:'"
-                        + StringHelper.getFraseStringLimitado(tema.getTituloTema(), 30) + "', inserido com sucesso!");
+                        + StringHelper.getFraseStringLimitado(tema.getTitulo(), 30) + "', inserido com sucesso!");
                 Bindings.limpar(Tema.class);
             } else {//senao altera o tema
                 tema = (Tema) controladorDespacho.getParam(MainFrame.OBJ_TEMA);
@@ -204,7 +204,7 @@ public class TemaDialog extends AbstractDialog {
                 adicTemaList.alterarItem(tema, adicTemaList.getList().getSelectedIndex());
 
                 JMessageUtil.showSucessMessage(this, "Tema:'"
-                        + StringHelper.getFraseStringLimitado(tema.getTituloTema(), 30) + "', alterado com sucesso!");
+                        + StringHelper.getFraseStringLimitado(tema.getTitulo(), 30) + "', alterado com sucesso!");
 
                 dispose();
             }
@@ -238,8 +238,8 @@ public class TemaDialog extends AbstractDialog {
                 if (tema == null) {
                     throw new NullPointerException("Objeto 'tema' esta nulo! Tela:'"+getTitle()+ "'");
                 }
-                tituloTField.setText(tema.getTituloTema());
-                descTArea.setText(tema.getDescricaoTema());
+                tituloTField.setText(tema.getTitulo());
+                descTArea.setText(tema.getDescricao());
                 salvarButton.setText("Alterar");
 
             } catch (Exception ex) {

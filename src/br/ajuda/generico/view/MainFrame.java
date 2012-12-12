@@ -77,7 +77,7 @@ public class MainFrame extends AbstractFrame {
             public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
                 if (value instanceof Tema) {
                     Tema t = (Tema) value;
-                    return renderer.getListCellRendererComponent(list, t.getTituloTema(), index, isSelected, cellHasFocus);
+                    return renderer.getListCellRendererComponent(list, t.getTitulo(), index, isSelected, cellHasFocus);
                 } else {
                     return renderer.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
                 }
@@ -332,7 +332,7 @@ public class MainFrame extends AbstractFrame {
 
         try {
             if(JMessageUtil.showConfirm("Você tem certeza que deseja deletar este tema:'"
-                    +StringHelper.getFraseStringLimitado(adicTemaList.getItemSelecionado().getTituloTema(),30)+ "'?")==JOptionPane.OK_OPTION){
+                    +StringHelper.getFraseStringLimitado(adicTemaList.getItemSelecionado().getTitulo(),30)+ "'?")==JOptionPane.OK_OPTION){
                 temaController.excluir(adicTemaList.getItemSelecionado());
                 adicTemaList.removerItem(adicTemaList.getItemSelecionado());
             }

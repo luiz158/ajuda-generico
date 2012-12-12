@@ -38,9 +38,9 @@ public class TesteHSQLDB {
 
         DaoFactory daoFactory = DaoFactory.getDaoFactory();
         ITemaDao temaDao = daoFactory.getTemaDao();
-        Tema tema = temaDao.prepareQueryReturnSingleBean(new Tema(2L,"my girls"));
-        System.out.println(tema);
-        temaDao.commit();
-        temaDao.disconnection();
+//        Tema tema = temaDao.prepareQueryReturnSingleBean(new Tema(2L,"my girls"));
+//        System.out.println(tema);
+//        temaDao.commit();
+//        temaDao.disconnection();
     }
 }

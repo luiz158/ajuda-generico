@@ -12,6 +12,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
@@ -25,7 +26,6 @@ import java.util.logging.Logger;
 import jfun.util.beans.Bean;
 import jfun.util.beans.NoSuchPropertyException;
 import jfun.util.beans.PropertyNotReadableException;
-import jfun.util.beans.PropertyNotWritableException;
 import org.apache.commons.beanutils.BeanUtils;
 
 /**
@@ -42,14 +42,35 @@ public class BeanHelper extends BeanUtils {
      */
     public static boolean isAtributoContemBean(Object bean, String buscaNome) {
         boolean r = false;
-        Field[] fields = bean.getClass().getDeclaredFields();
+        
+        Field[] fields = getAllFields(bean.getClass());
         for (Field field : fields) {
+            field.setAccessible(true);
             if (field.getName().equals(buscaNome)) {
                 r = true;
                 break;
             }
         }
         return r;
+    }
+
+    public static Field[] getAllFields(Class<?> c){
+        List<Field> fList = new ArrayList();
+        addDeclaredAndInheritedFields(c, fList);
+        return fList.toArray(new Field[fList.size()]);
+    }
+
+    /**
+     * obtem todos os metodos declarados ate os herdados
+     * @param c
+     * @param fields
+     */
+    public static void addDeclaredAndInheritedFields(Class<?> c, Collection<Field> fields) {
+        fields.addAll(Arrays.asList(c.getDeclaredFields()));
+        Class<?> superClass = c.getSuperclass();
+        if (superClass != null) {
+            addDeclaredAndInheritedFields(superClass, fields);
+        }
     }
 
     public static <T> Map<String, Object> parseListBeanToMap(List<T> listBeans) {
@@ -203,7 +224,7 @@ public class BeanHelper extends BeanUtils {
             return beanMap;
         }
         Class clazz = bean.getClass();
-        Field[] fields = clazz.getDeclaredFields();
+        Field[] fields = BeanHelper.getAllFields(clazz);
         for (Field field : fields) {
             String name = field.getName();
             field.setAccessible(true);
@@ -241,7 +262,7 @@ public class BeanHelper extends BeanUtils {
         //inicializando indice com 1
         beanMap.setIndex(1);
         Class clazz = bean.getClass();
-        Field[] fields = clazz.getDeclaredFields();
+        Field[] fields = BeanHelper.getAllFields(clazz);
         for (Field field : fields) {
             String name = field.getName();
             field.setAccessible(true);
@@ -279,7 +300,7 @@ public class BeanHelper extends BeanUtils {
         //inicializando indice com 1
         beanMap.setIndex(1);
         Class clazz = bean.getClass();
-        Field[] fields = clazz.getDeclaredFields();
+        Field[] fields = BeanHelper.getAllFields(clazz);
         for (Field field : fields) {
 
             String name = field.getName();
@@ -335,7 +356,7 @@ public class BeanHelper extends BeanUtils {
         if (origem == null) {
             return;
         }
-        Field[] fields = origem.getClass().getDeclaredFields();
+        Field[] fields = BeanHelper.getAllFields(origem.getClass());
         for (Field field : fields) {
             String name = field.getName();
             Object value = getPropriedade(origem, name);

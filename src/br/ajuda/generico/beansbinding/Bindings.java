@@ -261,7 +261,7 @@ public class Bindings {
      * @param classe
      */
     public static <C> void limpar(Class classe) {
-        Field[] campos = classe.getDeclaredFields();
+        Field[] campos = BeanHelper.getAllFields(classe);;
         for (Field campo : campos) {
             campo.setAccessible(true);
 

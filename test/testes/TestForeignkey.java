@@ -40,9 +40,9 @@ public class TestForeignkey extends TestMain{
         try {
             ISubTemaDao subTemaDao = daoFactory.getSubTemaDao();
             SubTema s = new SubTema();
-            s.setTema(new Tema(3L));
-            s.setIdTema(s.getTema().getIdTema());
-            s.setTituloSubTema("configurando samba no debian");
+//            s.setTema(new Tema(3L));
+//            s.setIdTema(s.getTema().getIdTema());
+//            s.setTituloSubTema("configurando samba no debian");
             
             subTemaDao.savePrepare(s);
 
