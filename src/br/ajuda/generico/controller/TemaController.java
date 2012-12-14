@@ -71,7 +71,7 @@ public class TemaController extends AbstractController implements CrudController
     }
 
     @Override
-    public List<Tema> consultaLista(Tema bean) throws Exception {
-        return SqlUtil.parseListMapToListBean(temaDao.cexecuteQuery("SELECT * FROM " + managerAnnotationEntities.getNomeTabela(bean)), Tema.class);
+    public List<Tema> consultaLista(Tema tema) throws Exception {
+        return SqlUtil.parseListMapToListBean(temaDao.cexecuteQuery("SELECT * FROM " + managerAnnotationEntities.getNomeTabela(tema)), Tema.class);
     }
 }

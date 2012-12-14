@@ -23,9 +23,9 @@ import br.ajuda.generico.beansbinding.conversores.ConversorDate;
 import br.ajuda.generico.beansbinding.conversores.ConversorDouble;
 import br.ajuda.generico.beansbinding.conversores.ConversorInteger;
 import br.ajuda.generico.beansbinding.conversores.ConversorLong;
+import br.ajuda.generico.beansbinding.conversores.ConversorObject;
 import br.ajuda.generico.beansbinding.conversores.ConversorShort;
 import br.ajuda.generico.beansbinding.conversores.ConversorString;
-import br.ajuda.generico.entities.Tema;
 import br.ajuda.generico.util.BeanHelper;
 import br.ajuda.generico.util.StringHelper;
 import java.awt.Component;
@@ -59,7 +59,7 @@ public class Bindings {
      * @param valorDefault valor default original do componente
      * @param tipoClasseComp tipo da classe requerida para conversão do valor do componente.
      */
-    public static void adicLigacao(Component componente, String nomeMetodo, Object valorDefault, Class<?> tipoClasseComp) {
+    public static <C> void adicLigacao(C componente, String nomeMetodo, Object valorDefault, Class<?> tipoClasseComp) {
         aL(componente, nomeMetodo, valorDefault, tipoClasseComp, null);
     }
 
@@ -72,11 +72,11 @@ public class Bindings {
      * @param tipoClasseComp tipo da classe requerida para conversão do valor do componente.
      * @param conversorComponente personalisar o conversor
      */
-    public static void adicLigacao(Component componente, String nomeMetodo, Object valorDefault, Class<?> tipoClasseComp, ConversorComponente conversorComponente) {
+    public static <C> void adicLigacao(C componente, String nomeMetodo, Object valorDefault, Class<?> tipoClasseComp, ConversorComponente conversorComponente) {
         aL(componente, nomeMetodo, valorDefault, tipoClasseComp, conversorComponente);
     }
 
-    private static void aL(Component componente, String nomeMetodo, Object valorDefault, Class<?> tipoClasseComp, ConversorComponente conversorComponente) {
+    private static <C> void aL(C componente, String nomeMetodo, Object valorDefault, Class<?> tipoClasseComp, ConversorComponente conversorComponente) {
         beansBindings.add(new BeanComposicaoBinding(componente, nomeMetodo, tipoClasseComp, valorDefault, conversorComponente));
     }
 
@@ -250,7 +250,9 @@ public class Bindings {
 
                 }
             } else {
-                BeanHelper.setPropriedade(bean, valor, comp.getName());
+                 ConversorComponente conversor = (beanBinding.getConversorComponente() == null)
+                            ? new ConversorObject() : beanBinding.getConversorComponente();
+                BeanHelper.setPropriedade(bean, conversor.converterParaObjeto(comp, valor), comp.getName());
             }
         }
     }

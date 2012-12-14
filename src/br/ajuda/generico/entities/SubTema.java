@@ -40,6 +40,10 @@ public class SubTema extends Topico implements Serializable {
     public SubTema() {
     }
 
+    public SubTema(Long idTema) {
+        this.idTema = idTema;
+    }
+
     /**
      * @return the tema
      */
@@ -67,6 +71,44 @@ public class SubTema extends Topico implements Serializable {
     public void setIdTema(Long idTema) {
         this.idTema = idTema;
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final SubTema other = (SubTema) obj;
+        if (this.id != other.id && (this.id == null || !this.id.equals(other.id))) {
+            return false;
+        }
+        if (this.idTema != other.idTema && (this.idTema == null || !this.idTema.equals(other.idTema))) {
+            return false;
+        }
+        if ((this.titulo == null) ? (other.titulo != null) : !this.titulo.equals(other.titulo)) {
+            return false;
+        }
+        if ((this.descricao == null) ? (other.descricao != null) : !this.descricao.equals(other.descricao)) {
+            return false;
+        }
+        if (this.dataInsercao != other.dataInsercao && (this.dataInsercao == null || !this.dataInsercao.equals(other.dataInsercao))) {
+            return false;
+        }
+        if (this.dataAtualizacao != other.dataAtualizacao && (this.dataAtualizacao == null || !this.dataAtualizacao.equals(other.dataAtualizacao))) {
+            return false;
+        }
+        return true;
+    }
+    
+    @Override
+    public int hashCode() {
+        int hash = 5;
+        hash = 59 * hash + (this.id != null ? this.id.hashCode() : 0);
+        return hash;
+    }
+
 
 
 }

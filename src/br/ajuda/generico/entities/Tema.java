@@ -31,10 +31,17 @@ public class Tema extends Topico implements Serializable {
     @Transitorio
     private static final long serialVersionUID = -8249014547569069393L;
 
+
     public Tema() {
         
     }
 
-    
+    public Tema(Long id) {
+        this.id = id;
+    }
+
+    public Tema(String titulo){
+        this.titulo =titulo;
+    }
 
 }

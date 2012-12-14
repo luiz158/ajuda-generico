@@ -17,12 +17,14 @@
 
 package testes;
 
+import br.ajuda.generico.controller.SubTemaController;
 import br.ajuda.generico.dao.ISubTemaDao;
 import br.ajuda.generico.entities.SubTema;
 import br.ajuda.generico.entities.Tema;
 import br.ajuda.generico.jdbc.DaoFactory;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -36,17 +38,26 @@ public class TestForeignkey extends TestMain{
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        DaoFactory daoFactory = DaoFactory.getDaoFactory();
+        //DaoFactory daoFactory = DaoFactory.getDaoFactory();
         try {
-            ISubTemaDao subTemaDao = daoFactory.getSubTemaDao();
+            SubTemaController controller = new SubTemaController();
             SubTema s = new SubTema();
-//            s.setTema(new Tema(3L));
-//            s.setIdTema(s.getTema().getIdTema());
-//            s.setTituloSubTema("configurando samba no debian");
-            
-            subTemaDao.savePrepare(s);
-
-            subTemaDao.commit();
+            s.setTema(new Tema(3L));
+            s.setIdTema(s.getTema().getId());
+            s.setTitulo("configurando firefox.");
+            s.setDataInsercao(new Date());
+            s.setDataAtualizacao(new Date());
+            s = controller.salvar(s);
+            p(s+"");
+//            ISubTemaDao subTemaDao = daoFactory.getSubTemaDao();
+//            SubTema s = new SubTema();
+////            s.setTema(new Tema(3L));
+////            s.setIdTema(s.getTema().getIdTema());
+////            s.setTituloSubTema("configurando samba no debian");
+//
+//            subTemaDao.savePrepare(s);
+//
+//            subTemaDao.commit();
         } catch (Exception ex) {
             Logger.getLogger(TestForeignkey.class.getName()).log(Level.SEVERE, null, ex);
         }

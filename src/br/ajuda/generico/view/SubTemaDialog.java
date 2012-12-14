@@ -20,29 +20,62 @@
  *
  * Created on 12/12/2012, 18:22:00
  */
-
 package br.ajuda.generico.view;
 
 import br.ajuda.generico.beansbinding.Bindings;
 import br.ajuda.generico.controller.SubTemaController;
+import br.ajuda.generico.controller.TemaController;
 import br.ajuda.generico.entities.SubTema;
+import br.ajuda.generico.entities.Tema;
 import br.ajuda.generico.util.AbstractDialog;
+import br.ajuda.generico.util.ComboBoxSupport;
 import br.ajuda.generico.util.JMessageUtil;
 import br.ajuda.generico.util.StringHelper;
 import br.com.swing.componentes.personalizados.ui.ListaComFiltro;
+import java.awt.Component;
+import javax.swing.DefaultListCellRenderer;
+import javax.swing.JLabel;
+import javax.swing.JList;
+import javax.swing.ListCellRenderer;
 
 /**
  *
  * @author jacoboliveira
  */
 public class SubTemaDialog extends AbstractDialog {
+
     private SubTemaController subTemaController;
+    private TemaController temaController;
+    private ComboBoxSupport<Tema> comboBoxSupport;
+    private Tema itemDefaultCombo;
+
     /** Creates new form SubTemaDialog */
     public SubTemaDialog(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
+        comboBoxSupport = new ComboBoxSupport<Tema>(temaCBox);
+
+
+        temaCBox.setRenderer(new ListCellRenderer() {
+
+            DefaultListCellRenderer defaultRenderer = new DefaultListCellRenderer();
+
+            @Override
+            public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
+                JLabel label = (JLabel) defaultRenderer.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+
+                if (value instanceof Tema) {
+                    Tema tema = (Tema) value;
+                    label.setText(tema.getTitulo());
+                    return label;
+                }
+                return label;
+            }
+        });
         Bindings.adicLigacao(tituloSubTemaTField, "text", null, String.class);
         Bindings.adicLigacao(descSubTemaTArea, "text", null, String.class);
+        Bindings.adicLigacao(temaCBox, "selectedItem", itemDefaultCombo = new Tema(""), Tema.class);
+
     }
 
     /** This method is called from within the constructor to
@@ -62,6 +95,9 @@ public class SubTemaDialog extends AbstractDialog {
         jLabel2 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         descSubTemaTArea = new javax.swing.JTextArea();
+        jPanel5 = new javax.swing.JPanel();
+        jLabel3 = new javax.swing.JLabel();
+        temaCBox = new javax.swing.JComboBox();
         jSeparator1 = new javax.swing.JSeparator();
         jPanel4 = new javax.swing.JPanel();
         fecharButton = new javax.swing.JButton();
@@ -69,6 +105,9 @@ public class SubTemaDialog extends AbstractDialog {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosed(java.awt.event.WindowEvent evt) {
+                formWindowClosed(evt);
+            }
             public void windowOpened(java.awt.event.WindowEvent evt) {
                 formWindowOpened(evt);
             }
@@ -85,7 +124,7 @@ public class SubTemaDialog extends AbstractDialog {
         jLabel1.setPreferredSize(new java.awt.Dimension(50, 14));
         jPanel2.add(jLabel1);
 
-        tituloSubTemaTField.setName("tituloSubTemaTField"); // NOI18N
+        tituloSubTemaTField.setName("titulo"); // NOI18N
         jPanel2.add(tituloSubTemaTField);
 
         jPanel3.setName("jPanel3"); // NOI18N
@@ -99,30 +138,56 @@ public class SubTemaDialog extends AbstractDialog {
 
         descSubTemaTArea.setColumns(20);
         descSubTemaTArea.setRows(5);
-        descSubTemaTArea.setName("descSubTemaTArea"); // NOI18N
+        descSubTemaTArea.setName("descricao"); // NOI18N
         jScrollPane1.setViewportView(descSubTemaTArea);
 
         jPanel3.add(jScrollPane1);
+
+        jPanel5.setName("jPanel5"); // NOI18N
+        jPanel5.setLayout(new javax.swing.BoxLayout(jPanel5, javax.swing.BoxLayout.LINE_AXIS));
+
+        jLabel3.setText("Tema:");
+        jLabel3.setName("jLabel3"); // NOI18N
+        jLabel3.setPreferredSize(new java.awt.Dimension(48, 14));
+        jPanel5.add(jLabel3);
+
+        temaCBox.setName("tema"); // NOI18N
+        temaCBox.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                temaCBoxItemStateChanged(evt);
+            }
+        });
+        jPanel5.add(temaCBox);
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(31, 31, 31)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jPanel3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 300, Short.MAX_VALUE)
-                    .addComponent(jPanel2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 300, Short.MAX_VALUE))
-                .addGap(30, 30, 30))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addGap(40, 40, 40)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jPanel2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 300, Short.MAX_VALUE)
+                    .addComponent(jPanel3, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 300, Short.MAX_VALUE))
+                .addContainerGap())
+            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                    .addContainerGap(41, Short.MAX_VALUE)
+                    .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, 299, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addContainerGap()))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, 136, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(58, 58, 58))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 32, Short.MAX_VALUE)
+                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, 168, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
+            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jPanel1Layout.createSequentialGroup()
+                    .addGap(39, 39, 39)
+                    .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addContainerGap(183, Short.MAX_VALUE)))
         );
 
         jSeparator1.setName("jSeparator1"); // NOI18N
@@ -132,6 +197,11 @@ public class SubTemaDialog extends AbstractDialog {
 
         fecharButton.setText("Fechar");
         fecharButton.setName("fecharButton"); // NOI18N
+        fecharButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                fecharButtonActionPerformed(evt);
+            }
+        });
         jPanel4.add(fecharButton);
 
         salvarButton.setText("Adicionar");
@@ -147,86 +217,137 @@ public class SubTemaDialog extends AbstractDialog {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(25, 25, 25)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                     .addComponent(jPanel4, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jSeparator1, javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap(34, Short.MAX_VALUE))
+                    .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(31, 31, 31))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGap(24, 24, 24)
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(28, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        pack();
+        java.awt.Dimension screenSize = java.awt.Toolkit.getDefaultToolkit().getScreenSize();
+        setBounds((screenSize.width-419)/2, (screenSize.height-388)/2, 419, 388);
     }// </editor-fold>//GEN-END:initComponents
 
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
-        
-        try {
-            subTemaController = new SubTemaController();
-        } catch (Exception ex) {
-            controladorDespacho.registraEexibe(ex);
-        }
+//
+//        try {
+//            temaController = new TemaController();
+//            subTemaController = new SubTemaController();
+//            //inicializando combo
+//            comboBoxSupport.addItensCombo(temaController.consultaLista(new Tema()));
+//
+//            //TODO verificar auto complete esta com problema, ele devolve string em vez da classe
+//            //comboBoxSupport.activeAutoComplete("titulo");
+//            if (controladorDespacho.getParam(MainFrame.OPER_SUBTEMA) != null
+//                    && ((Integer) controladorDespacho.getParam(MainFrame.OPER_SUBTEMA)) == MainFrame.OPER_ALT_SUBTEMA) {
+//                try {
+//
+//                    SubTema subTema = subTemaController.consultaUnicoRetorno((SubTema) controladorDespacho.getParam(MainFrame.OBJ_SUBTEMA));
+//                    if (subTema == null) {
+//                        throw new NullPointerException("Objeto 'tema' esta nulo! Tela:'" + getTitle() + "'");
+//                    }
+//                    tituloSubTemaTField.setText(subTema.getTitulo());
+//                    descSubTemaTArea.setText(subTema.getDescricao());
+//
+//                    temaCBox.setSelectedItem(subTema.getTema());
+//                    salvarButton.setText("Alterar");
+//
+//                } catch (Exception ex) {
+//                    controladorDespacho.registraEexibe(ex);
+//                }
+//            } else if (controladorDespacho.getParam(MainFrame.OPER_SUBTEMA) != null
+//                    && ((Integer) controladorDespacho.getParam(MainFrame.OPER_SUBTEMA)) == MainFrame.OPER_ADIC_SUBTEMA) {
+//                temaCBox.setSelectedIndex(0);
+//            }
+//        } catch (Exception ex) {
+//            controladorDespacho.registraEexibe(ex);
+//        }
 
     }//GEN-LAST:event_formWindowOpened
 
     private void salvarButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_salvarButtonActionPerformed
 
-        try {
-
-            SubTema subTema = new SubTema();
-
-            int operacao = (Integer) controladorDespacho.getParam(MainFrame.OPER_TEMA);
-
-            //se a operacao for adicionar o tema
-            if (operacao == MainFrame.OPER_ADIC_TEMA) {
-                Bindings.analisarBean(subTema);
-                subTemaController.salvar(subTema);
-                //adiciono o tema na lista da janela principal
-                ((ListaComFiltro<SubTema>) controladorDespacho.getParam(MainFrame.COMP_ADIC_TEMA_JLIST)).adicionarItem(subTema);
-                JMessageUtil.showSucessMessage(this, "SubTema:'"
-                        + StringHelper.getFraseStringLimitado(subTema.getTitulo(), 30) + "', inserido com sucesso!");
-                Bindings.limpar(SubTema.class);
-            } else {//senao altera o tema
-                subTema = (SubTema) controladorDespacho.getParam(MainFrame.OBJ_TEMA);
-                Bindings.analisarBean(subTema);
-                subTemaController.alterar(subTema);
-                //altero o tema na lista da janela principal
-                ListaComFiltro<SubTema> adicTemaList = (ListaComFiltro) controladorDespacho.getParam(MainFrame.COMP_ADIC_TEMA_JLIST);
-
-                adicTemaList.alterarItem(subTema, adicTemaList.getList().getSelectedIndex());
-
-                JMessageUtil.showSucessMessage(this, "SubTema:'"
-                        + StringHelper.getFraseStringLimitado(subTema.getTitulo(), 30) + "', alterado com sucesso!");
-
-                dispose();
-            }
-
-            tituloSubTemaTField.setRequestFocusEnabled(true);
-        } catch (Exception ex) {
-            this.controladorDespacho.registraEexibe(ex);
-        }
+//        try {
+//
+//            SubTema subTema = new SubTema();
+//
+//            int operacao = (Integer) controladorDespacho.getParam(MainFrame.OPER_SUBTEMA);
+//
+//            //se a operacao for adicionar o tema
+//            if (operacao == MainFrame.OPER_ADIC_SUBTEMA) {
+//                Bindings.analisarBean(subTema);
+//                subTemaController.salvar(subTema);
+//                //adiciono o tema na lista da janela principal
+//       //         ((ListaComFiltro<SubTema>) controladorDespacho.getParam(MainFrame.COMP_ADIC_SUBTEMA_JLIST)).adicionarItem(subTema);
+//                JMessageUtil.showSucessMessage(this, "SubTema:'"
+//                        + StringHelper.getFraseStringLimitado(subTema.getTitulo(), 30) + "', inserido com sucesso!");
+//                Bindings.limpar(SubTema.class);
+//                temaCBox.setSelectedIndex(0);
+//            } else {//senao altera o tema
+//                subTema = (SubTema) controladorDespacho.getParam(MainFrame.OBJ_SUBTEMA);
+//                Bindings.analisarBean(subTema);
+//                subTemaController.alterar(subTema);
+//                //altero o tema na lista da janela principal
+//                ListaComFiltro<SubTema> adicTemaList = (ListaComFiltro) controladorDespacho.getParam(MainFrame.COMP_ADIC_SUBTEMA_JLIST);
+//
+//                adicTemaList.alterarItem(subTema, adicTemaList.getList().getSelectedIndex());
+//
+//                JMessageUtil.showSucessMessage(this, "SubTema:'"
+//                        + StringHelper.getFraseStringLimitado(subTema.getTitulo(), 30) + "', alterado com sucesso!");
+//
+//                dispose();
+//            }
+//
+//            tituloSubTemaTField.setRequestFocusEnabled(true);
+//        } catch (Exception ex) {
+//            this.controladorDespacho.registraEexibe(ex);
+//        }
 
     }//GEN-LAST:event_salvarButtonActionPerformed
 
+    private void formWindowClosed(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosed
+
+        //remocao dos parametros
+//        controladorDespacho.removerParam(MainFrame.OPER_SUBTEMA);
+//        controladorDespacho.removerParam(MainFrame.OBJ_SUBTEMA);
+
+    }//GEN-LAST:event_formWindowClosed
+
+    private void fecharButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fecharButtonActionPerformed
+
+        dispose();
+
+    }//GEN-LAST:event_fecharButtonActionPerformed
+
+    private void temaCBoxItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_temaCBoxItemStateChanged
+
+        
+
+    }//GEN-LAST:event_temaCBoxItemStateChanged
+
     /**
-    * @param args the command line arguments
-    */
+     * @param args the command line arguments
+     */
     public static void main(String args[]) {
         java.awt.EventQueue.invokeLater(new Runnable() {
+
             public void run() {
                 SubTemaDialog dialog = new SubTemaDialog(new javax.swing.JFrame(), true);
                 dialog.addWindowListener(new java.awt.event.WindowAdapter() {
+
                     public void windowClosing(java.awt.event.WindowEvent e) {
                         System.exit(0);
                     }
@@ -235,20 +356,21 @@ public class SubTemaDialog extends AbstractDialog {
             }
         });
     }
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextArea descSubTemaTArea;
     private javax.swing.JButton fecharButton;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
+    private javax.swing.JPanel jPanel5;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JButton salvarButton;
+    private javax.swing.JComboBox temaCBox;
     private javax.swing.JTextField tituloSubTemaTField;
     // End of variables declaration//GEN-END:variables
-
 }

@@ -15,32 +15,25 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package testes;
+package br.ajuda.generico.beansbinding.conversores;
 
-import br.ajuda.generico.util.NumberHelper;
-import br.ajuda.generico.util.RegexUtil;
-import java.text.ParseException;
+import br.ajuda.generico.beansbinding.ConversorComponente;
+import java.awt.Component;
 
 /**
  *
  * @author jacoboliveira
  */
-public class TestMain {
+public class ConversorObject implements ConversorComponente{
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String[] args) throws ParseException {
-        //System.out.println(DateUtil.stringToDate(DateUtil.FORMAT_DATE_DDMMYYYY, "06/12/2012"));
-//        GregorianCalendar calendar = new GregorianCalendar();
-//
-//        p(""+calendar.get(GregorianCalendar.DAY_OF_MONTH));
-        //p(RegexUtil.matcher("12/12/2012", RegexUtil.PATTERN_DATE_DDMMYYYY)+"");
-        p(String.valueOf(NumberHelper.newDecimalFormatCustom().parse("1.200,50")));
+    @Override
+    public Object converterParaObjeto(Component componente, Object valor) throws Exception {        
+        return valor;
     }
 
-    public static void p(String s) {
-        System.out.println(s);
+    @Override
+    public Object converterParaComponente(Component componente, Object bean) throws Exception {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 
 }

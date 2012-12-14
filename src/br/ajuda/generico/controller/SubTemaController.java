@@ -17,10 +17,14 @@
 package br.ajuda.generico.controller;
 
 import br.ajuda.generico.dao.ISubTemaDao;
+import br.ajuda.generico.dao.ITemaDao;
 import br.ajuda.generico.entities.SubTema;
+import br.ajuda.generico.entities.Tema;
 import br.ajuda.generico.util.AbstractController;
 import br.ajuda.generico.util.CrudController;
+import br.ajuda.generico.util.SqlUtil;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.util.List;
 
 /**
@@ -30,21 +34,36 @@ import java.util.List;
 public class SubTemaController extends AbstractController implements CrudController<SubTema> {
 
     private ISubTemaDao subTemaDao;
+    private ITemaDao temaDao;
 
     public SubTemaController() throws Exception {
         super();
         subTemaDao = daoFactory.getSubTemaDao();
+        temaDao = daoFactory.getTemaDao();
     }
 
     @Override
     public SubTema salvar(SubTema subTema) throws Exception {
+        subTema.setIdTema(subTema.getTema().getId());
         subTemaDao.savePrepare(subTema);
+        PreparedStatement p = subTemaDao.getConnection().prepareStatement(
+                "SELECT * FROM "+managerAnnotationEntities.getNomeTabela(subTema),
+                ResultSet.TYPE_SCROLL_INSENSITIVE,
+                ResultSet.CONCUR_READ_ONLY);
+
+        ResultSet rs = p.executeQuery();
+        rs.last();
+        subTema = SqlUtil.converterResultSetParaBean(p, rs, SubTema.class);        
         subTemaDao.commit();
+        if(rs!=null){
+            rs.close();
+        }
         return subTema;
     }
 
     @Override
     public SubTema alterar(SubTema subTema) throws Exception {
+        subTema.setIdTema(subTema.getTema().getId());
         subTemaDao.updatePrepare(subTema);
         subTemaDao.commit();
         return subTema;
@@ -52,6 +71,7 @@ public class SubTemaController extends AbstractController implements CrudControl
 
     @Override
     public SubTema excluir(SubTema subTema) throws Exception {
+        subTema.setIdTema(subTema.getTema().getId());
         PreparedStatement psmt = subTemaDao.prepare("DELETE FROM " + managerAnnotationEntities.getNomeTabela(subTema) + " WHERE id_subtema=?");
         psmt.setLong(1, subTema.getId());
         psmt.execute();
@@ -61,15 +81,23 @@ public class SubTemaController extends AbstractController implements CrudControl
 
     @Override
     public SubTema consultaUnicoRetorno(SubTema subTema) throws Exception {
-        SubTema s = subTemaDao.prepareQueryReturnSingleBean(subTema);
+
+        subTema = subTemaDao.prepareQueryReturnSingleBean(subTema);
+        subTema.setTema(temaDao.prepareQueryPorIdsReturnSingleBean(new Tema(subTema.getIdTema())));
         subTemaDao.commit();
-        return s;
+        return subTema;
     }
 
     @Override
     public List<SubTema> consultaLista(SubTema subTema) throws Exception {
-        List l = subTemaDao.cexecuteQuery("SELECT FROM " + managerAnnotationEntities.getNomeTabela(subTema));
+        List l = null;
+        String sql = "SELECT * FROM " + managerAnnotationEntities.getNomeTabela(subTema);
+        if (subTema.getIdTema() != null) {
+            l = subTemaDao.cexecuteQuery(sql + " WHERE id_tema=" + subTema.getIdTema());
+        } else {
+            l = subTemaDao.cexecuteQuery(sql);
+        }
         subTemaDao.commit();
-        return l;
+        return SqlUtil.parseListMapToListBean(l, SubTema.class);
     }
 }

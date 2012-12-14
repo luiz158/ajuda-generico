@@ -46,8 +46,8 @@ public class ConnectionDB {
                 //System.out.println("Conectando ao banco clinica_test...");
                 //log.log(Level.INFO, "Setando application_name p/ 'AWJ' ...");
             } catch (SQLException sql) {
-                throw new Exception("Houve um erro na configuracao dos parametros "
-                        + "ou base de dados desligada:\n" + sql.getMessage());
+                throw new Exception("Houve um erro na configuracao dos parametros\n "
+                        + "ou base de dados desligada\n ou base de dados esta sendo usando por outro programa:\n" + sql.getMessage());
             }
         }
     }

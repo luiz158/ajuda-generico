@@ -23,4 +23,5 @@ package br.ajuda.generico.controladordespacho;
  */
 public interface Visao {
     public void setControladorDespacho(ControladorDespacho controladorDespacho);
+    
 }
