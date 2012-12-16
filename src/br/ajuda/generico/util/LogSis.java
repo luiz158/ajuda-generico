@@ -24,13 +24,13 @@ public class LogSis {
         //TODO fazer uma rotina criar uma pasta 'logs' e transferir o arquivo sis.log para dentro da mesma
         try {
 
-            String appPath = FileHelper.getLocationAppPath()
-                    + SO.getSepArqSO()
-                    + "build"
-                    + SO.getSepArqSO()
-                    + "classes";
+//            String appPath = FileHelper.getLocationAppPath()
+//                    + SO.getSepArqSO()
+//                    + "build"
+//                    + SO.getSepArqSO()
+//                    + "classes";
              
-            //String appPath =FileHelper.getLocationAppPath();
+            String appPath =FileHelper.getLocationAppPath();
             System.out.println(appPath);
             File arq = new File(appPath + SO.getSepArqSO() + "sis.log");
             if (!arq.exists()) {

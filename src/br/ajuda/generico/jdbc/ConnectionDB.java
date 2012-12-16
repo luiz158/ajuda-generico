@@ -22,7 +22,7 @@ public class ConnectionDB {
     private final static String username = "SA";
     private final static String password = "";
     private static String nomeBanco = "ajuda_generico";
-    private final static String url = "jdbc:hsqldb:file:C:/BaseDeDados/ajuda-generico/ajuda_generico";
+    //private final static String url = "jdbc:hsqldb:file:C:/BaseDeDados/ajuda-generico/ajuda_generico";
     private final static String driver = "org.hsqldb.jdbcDriver";
     private static final Logger log = Logger.getLogger(ConnectionDB.class.getName());
 
@@ -36,7 +36,7 @@ public class ConnectionDB {
                 throw new Exception("Driver hsqldb Não encontrado!");
             }
             try {
-                connection = DriverManager.getConnection(url, username, password);
+                connection = DriverManager.getConnection(getUrl(), username, password);
                 //this.connection.setClientInfo("AWJ", "Aplicacao Web");
                 connection.setAutoCommit(false);
                 connection.setReadOnly(false);
