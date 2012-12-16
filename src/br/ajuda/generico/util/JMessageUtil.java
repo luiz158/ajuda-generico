@@ -16,7 +16,11 @@ import javax.swing.JTextArea;
  * @author jacoblisboa
  */
 public class JMessageUtil {
-        
+
+    public static final String TIPO_IMG_PERGUNTA = "help.gif";
+    public static final String TIPO_IMG_LOCALIZAR = "localizar.gif";
+    public static final String TIPO_IMG_SUCESSO = "sucess_msg.gif";
+
     public static void showWarningMessage(Component comp, String message) {
         JTextArea area = new JTextArea(10, 30);
         area.setWrapStyleWord(true);
@@ -37,20 +41,28 @@ public class JMessageUtil {
         return JOptionPane.showInputDialog(comp, message, "Pergunta:", JOptionPane.QUESTION_MESSAGE);
     }
 
-
-
-    public static int showOptionDialog(Component comp, Object message,String titulo,Object valorDefault,Object[] opcoes){
+    /**
+     * 
+     * @param comp
+     * @param message mensagem do dialog
+     * @param titulo titulo do dialog
+     * @param valorDefault valor da string do botao
+     * @param opcoes definicao dos botoes que irao aparecer no dialog.
+     * @param tipoMsg exemplo: JMessageUtil.TIPO_IMG_PERGUNTA.
+     * @return um inteiro da posicao do botao pressionado
+     */
+    public static int showOptionDialog(Component comp, Object message, String titulo, Object valorDefault, Object[] opcoes, String tipoMsg) {
         return JOptionPane.showOptionDialog(comp,
                 message,
                 titulo,
                 JOptionPane.OK_CANCEL_OPTION,
                 JOptionPane.PLAIN_MESSAGE,
-                ImageUtil.getImageIconResource(ConstantsControl.PATH_IMAGES + "localizar.gif"),
+                ImageUtil.getImageIconResource(ConstantsControl.PATH_IMAGES + tipoMsg),
                 opcoes,
                 valorDefault);
     }
 
-     /**
+    /**
      *
      * @param message
      * @param titulo
@@ -59,14 +71,15 @@ public class JMessageUtil {
      * @param valoresSelecionados
      * @return
      */
-    public static Object showInputMessage(Component comp,Object message,Object[] valoresSelecionados) {
+    public static Object showInputMessage(Component comp, Object message, Object[] valoresSelecionados) {
         return JOptionPane.showInputDialog(comp,
                 message,
                 "Pergunta:",
                 JOptionPane.QUESTION_MESSAGE,
                 ImageUtil.getImageIconResource(ConstantsControl.PATH_IMAGES + "help.gif"),
-                valoresSelecionados,null);
+                valoresSelecionados, null);
     }
+
     /**
      * 
      * @param message
@@ -76,13 +89,13 @@ public class JMessageUtil {
      * @param valoresSelecionados
      * @return
      */
-    public static Object showInputMessage(Component comp,Object message,String titulo,Object[] valoresSelecionados) {
+    public static Object showInputMessage(Component comp, Object message, String titulo, Object[] valoresSelecionados) {
         return JOptionPane.showInputDialog(comp,
                 message,
                 titulo,
                 JOptionPane.QUESTION_MESSAGE,
                 ImageUtil.getImageIconResource(ConstantsControl.PATH_IMAGES + "help.gif"),
-                valoresSelecionados,null);
+                valoresSelecionados, null);
     }
 
     public static void showInfoMessage(Component comp, String message) {
@@ -109,5 +122,4 @@ public class JMessageUtil {
         area.append(message);
         JOptionPane.showMessageDialog(comp, new JScrollPane(area), "Mensagen(s) do Sistema:", JOptionPane.PLAIN_MESSAGE);
     }
-
 }

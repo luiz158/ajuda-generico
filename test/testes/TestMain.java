@@ -17,8 +17,7 @@
 
 package testes;
 
-import br.ajuda.generico.util.NumberHelper;
-import br.ajuda.generico.util.RegexUtil;
+import br.ajuda.generico.util.JMessageUtil;
 import java.text.ParseException;
 
 /**
@@ -36,7 +35,10 @@ public class TestMain {
 //
 //        p(""+calendar.get(GregorianCalendar.DAY_OF_MONTH));
         //p(RegexUtil.matcher("12/12/2012", RegexUtil.PATTERN_DATE_DDMMYYYY)+"");
-        p(String.valueOf(NumberHelper.newDecimalFormatCustom().parse("1.200,50")));
+        //p(String.valueOf(NumberHelper.newDecimalFormatCustom().parse("1.200,50")));
+        int opcao =  JMessageUtil.showOptionDialog(null, "Houve alteração no formulario de edição,"
+                        + "você deseja realmente cancelar?", "Confirmação de Cancelamento alteração", "Não", new Object[]{"Sim","Não"},JMessageUtil.TIPO_IMG_PERGUNTA);
+        p(""+opcao);
     }
 
     public static void p(String s) {

@@ -29,6 +29,9 @@ import javax.swing.DefaultListCellRenderer;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.ListCellRenderer;
+import javax.swing.ListSelectionModel;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
@@ -36,7 +39,7 @@ import javax.swing.event.ListSelectionListener;
  *
  * @author jacob
  */
-public class MainFrame extends AbstractFrame {
+public class MainFrame extends AbstractFrame implements DocumentListener {
 
     public static final String OBJ_TEMA = "tema";
     public static final String OPER_TEMA = "operacao_tema";
@@ -51,6 +54,7 @@ public class MainFrame extends AbstractFrame {
     private TemaController temaController;
     private SubTemaController subTemaController;
     private ListSupport adicTemaLSupport;
+    private boolean isHouveAlteracaoEdicaoTexto = false;
 
     /** Creates new form MainFrame */
     public MainFrame() {
@@ -66,26 +70,6 @@ public class MainFrame extends AbstractFrame {
                     estadoAdicTema();
                 } else {
                     estadoAltExclTema();
-                }
-            }
-        });
-        adicSubTemaList.addListSelectionListener(new ListSelectionListener() {
-
-            @Override
-            public void valueChanged(ListSelectionEvent e) {
-
-                if (adicSubTemaList.getList().isSelectionEmpty()) {
-                    //estadoAdicSubTema();
-                    estadoPadraoSubTema();
-                    estadoControleEdicaoTexto(false);
-                    excSubTemaButton.setEnabled(false);
-                    estadoEdicaoTButton.setVisible(false);
-                } else {
-                    //estadoControleEdicaoTexto(true);
-                    excSubTemaButton.setEnabled(true);
-                    estadoEdicaoTButton.setVisible(true);
-                    cancelSubTemaButton.setVisible(false);
-                    //estadoAltExclSubTema();
                 }
             }
         });
@@ -132,12 +116,37 @@ public class MainFrame extends AbstractFrame {
                 }
             }
         });
+        adicSubTemaList.getList().addListSelectionListener(new ListSelectionListener() {
+
+            @Override
+            public void valueChanged(ListSelectionEvent e) {
+                //TODO implementar uma maneira de avisar ao usuario quando ele mundo de selecao,
+                //para quando estiver no mode de edicao o formulario de texto avisar que
+                //os dados irao se perder
+
+                if (!adicSubTemaList.getList().isSelectionEmpty()) {
+//                    int opcao = confirmaAlteracao();
+//                    if (opcao == 0) {
+//                        JMessageUtil.showInputMessage(MainFrame.this, "change");
+//                    }
+                }
+            }
+        });
         adicSubTemaList.getList().addMouseListener(new MouseListener() {
 
             @Override
             public void mouseClicked(MouseEvent e) {
-                visualisarEditor();
-                visualisarControleEdicaoTexto(true);
+                if (!adicSubTemaList.getList().isSelectionEmpty()) {
+                    popularDadosPainelEdicao();
+                    estadoExcSubTema();
+                    visualisarControleEdicaoTexto(true);
+                    modoLeituraControleEdicaoTexto(true);
+                    estadoEdicaoTButton.setVisible(true);
+                    estadoEdicaoTButton.setSelected(false);
+                    salvarSubTemaButton.setEnabled(false);
+                    ativarListenerEdicaoTexto(false);
+                    isHouveAlteracaoEdicaoTexto = false;
+                }
             }
 
             @Override
@@ -170,11 +179,10 @@ public class MainFrame extends AbstractFrame {
             @Override
             public void keyReleased(KeyEvent e) {
                 if (e.getKeyCode() == KeyEvent.VK_UP || e.getKeyCode() == KeyEvent.VK_DOWN) {
-                    visualisarEditor();
+                    popularDadosPainelEdicao();
                 }
             }
         });
-
 
         // CELLRENDERS
         adicTemaList.setCellRenderer(new ListCellRenderer() {
@@ -216,84 +224,6 @@ public class MainFrame extends AbstractFrame {
 
     }
 
-    private void visualisarControleEdicaoTexto(boolean b) {
-        editorSPane.setVisible(b);
-        controleEdicaoTextoPanel.setVisible(b);
-    }
-
-    private void visualisarEditor() {
-        editorPanel.setText(adicSubTemaList.getItemSelecionado().getDescricao());
-    }
-
-    private void popularSubTemaLista() {
-        try {
-            List<SubTema> subTemaList = subTemaController.consultaLista(new SubTema(adicTemaList.getItemSelecionado().getId()));
-            adicSubTemaList.removeAllItens();
-            adicSubTemaList.adicionarItens(subTemaList);
-        } catch (Exception ex) {
-            controladorDespacho.registraEexibe(ex);
-        }
-    }
-
-    //controle de estado do tema
-    public void estadoAdicTema() {
-        adicTemaButton.setEnabled(true);
-        altTemaButton.setEnabled(false);
-        excTemaButton.setEnabled(false);
-        cancelTemaButton.setEnabled(false);
-    }
-
-    public void estadoAltExclTema() {
-        adicTemaButton.setEnabled(false);
-        altTemaButton.setEnabled(true);
-        excTemaButton.setEnabled(true);
-        cancelTemaButton.setEnabled(true);
-    }
-
-    public void estadoExclTema() {
-        adicTemaButton.setEnabled(false);
-        altTemaButton.setEnabled(false);
-        excTemaButton.setEnabled(true);
-        cancelTemaButton.setEnabled(true);
-    }
-
-    //controle de estado do subtema
-    public void estadoPadraoSubTema() {
-        adicSubTemaButton.setEnabled(true);
-        altSubTemaButton.setEnabled(false);
-        excSubTemaButton.setEnabled(false);
-        cancelSubTemaButton.setEnabled(false);
-    }
-
-    public void estadoAdicSubTema() {
-        adicSubTemaButton.setEnabled(false);
-        altSubTemaButton.setEnabled(false);
-        excSubTemaButton.setEnabled(false);
-        cancelSubTemaButton.setEnabled(true);
-    }
-
-    public void estadoAltSubTema() {
-        adicSubTemaButton.setEnabled(false);
-        altSubTemaButton.setEnabled(true);
-        //excSubTemaButton.setEnabled(true);
-        cancelSubTemaButton.setEnabled(true);
-    }
-
-    public void estadoExclSubTema() {
-        adicSubTemaButton.setEnabled(false);
-        altSubTemaButton.setEnabled(false);
-        excSubTemaButton.setEnabled(true);
-        cancelSubTemaButton.setEnabled(true);
-    }
-
-    public void estadoControleEdicaoTexto(boolean b) {
-        tituloSubTemaTField.setEditable(b);
-        salvarSubTemaButton.setEnabled(b);
-        editorPanel.setEditable(b);
-        tituloSubTemaTField.setRequestFocusEnabled(b);
-        //estadoEdicaoTButton.setSelected(b);
-    }
-
     /** This method is called from within the constructor to
      * initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is
@@ -303,7 +233,6 @@ public class MainFrame extends AbstractFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        altSubTemaButton = new javax.swing.JButton();
         jSplitPane1 = new javax.swing.JSplitPane();
         jPanel1 = new javax.swing.JPanel();
         adicTemaList = new br.com.swing.componentes.personalizados.ui.ListaComFiltro<Tema>();
@@ -331,20 +260,15 @@ public class MainFrame extends AbstractFrame {
         jLabel1 = new javax.swing.JLabel();
         menuBar = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
+        jMenuItem1 = new javax.swing.JMenuItem();
         jMenu2 = new javax.swing.JMenu();
 
-        altSubTemaButton.setText("ALT");
-        altSubTemaButton.setEnabled(false);
-        altSubTemaButton.setName("altSubTemaButton"); // NOI18N
-        altSubTemaButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                altSubTemaButtonActionPerformed(evt);
-            }
-        });
-
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
         setTitle("Ajuda v.1.0");
         addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                formWindowClosing(evt);
+            }
             public void windowOpened(java.awt.event.WindowEvent evt) {
                 formWindowOpened(evt);
             }
@@ -520,11 +444,6 @@ public class MainFrame extends AbstractFrame {
 
         estadoEdicaoTButton.setText("Editar");
         estadoEdicaoTButton.setName("estadoEdicaoTButton"); // NOI18N
-        estadoEdicaoTButton.addItemListener(new java.awt.event.ItemListener() {
-            public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                estadoEdicaoTButtonItemStateChanged(evt);
-            }
-        });
         estadoEdicaoTButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 estadoEdicaoTButtonActionPerformed(evt);
@@ -550,6 +469,16 @@ public class MainFrame extends AbstractFrame {
 
         jMenu1.setText("Sistema");
         jMenu1.setName("jMenu1"); // NOI18N
+
+        jMenuItem1.setText("Sair");
+        jMenuItem1.setName("jMenuItem1"); // NOI18N
+        jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem1ActionPerformed(evt);
+            }
+        });
+        jMenu1.add(jMenuItem1);
+
         menuBar.add(jMenu1);
 
         jMenu2.setName("jMenu2"); // NOI18N
@@ -608,11 +537,35 @@ public class MainFrame extends AbstractFrame {
     }//GEN-LAST:event_excTemaButtonActionPerformed
 
     private void cancelTemaButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelTemaButtonActionPerformed
+        try {
 
-        adicTemaList.getList().clearSelection();
-        adicSubTemaList.removeAllItens();
-        estadoAdicTema();
-        estadoAdicSubTema();
+            if (isHouveAlteracaoEdicaoTexto) {
+                int opcao = confirmaAlteracao();
+                if (opcao == 0) {
+                    rollbackEdicaodeTexto();
+                    modoLeituraControleEdicaoTexto(true);
+                    salvarSubTemaButton.setEnabled(false);
+                    cancelSubTemaButton.setVisible(false);
+                    isHouveAlteracaoEdicaoTexto = false;
+                    ativarListenerEdicaoTexto(false);
+                    limparCamposControleEdicaoTexto();
+                } else {
+                    estadoEdicaoTButton.setSelected(true);
+                    return;
+                }
+            }
+
+            visualisarControleEdicaoTexto(false);
+            limparCamposControleEdicaoTexto();
+            adicTemaList.getList().clearSelection();
+            adicSubTemaList.removeAllItens();
+            estadoAdicTema();
+            estadoAdicSubTema();
+            isHouveAlteracaoEdicaoTexto = false;
+        } catch (Exception ex) {
+            controladorDespacho.registraEexibe(ex);
+
+        }
 
     }//GEN-LAST:event_cancelTemaButtonActionPerformed
 
@@ -623,23 +576,28 @@ public class MainFrame extends AbstractFrame {
             controladorDespacho.exibirMsgs();
             return;
         }
+        if (isHouveAlteracaoEdicaoTexto) {
+            int opcao = JMessageUtil.showOptionDialog(this, "Seus dados do formulario de edição de texto irão se perder, você deseja realmente continuar com esta operação?", "Confirmação de cancelamento de inserção", "Não", new Object[]{"Sim", "Não"}, JMessageUtil.TIPO_IMG_PERGUNTA);
+            if (opcao == 1) {
+                return;
+            }
+        }
+
         OPER_SUBTEMA = OPER_ADIC_SUBTEMA;
+        limparCamposControleEdicaoTexto();
         visualisarControleEdicaoTexto(true);
-        estadoControleEdicaoTexto(true);
-        estadoAdicSubTema();
-        cancelSubTemaButton.setVisible(true);
+        modoLeituraControleEdicaoTexto(false);
+        salvarSubTemaButton.setEnabled(false);
+        estadoPadraoSubTema();
+        estadoEdicaoTButton.setVisible(false);
         adicSubTemaList.getList().clearSelection();
-        
+        tituloSubTemaTField.setRequestFocusEnabled(true);
+        ativarListenerEdicaoTexto(true);
+
 //        controladorDespacho.setParam(OPER_SUBTEMA, OPER_ADIC_SUBTEMA);//se for para adicionar um subtema
 //        controladorDespacho.despachar(new SubTemaDialog(this, true));
 
     }//GEN-LAST:event_adicSubTemaButtonActionPerformed
-
-    private void altSubTemaButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_altSubTemaButtonActionPerformed
-//        controladorDespacho.setParam(OBJ_SUBTEMA, adicSubTemaList.getList().getSelectedValue());
-//        controladorDespacho.setParam(OPER_SUBTEMA, OPER_ALT_SUBTEMA);//se for alteracao
-//        controladorDespacho.despachar(new SubTemaDialog(this, true));
-    }//GEN-LAST:event_altSubTemaButtonActionPerformed
 
     private void excSubTemaButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_excSubTemaButtonActionPerformed
 
@@ -648,6 +606,14 @@ public class MainFrame extends AbstractFrame {
                     + StringHelper.getFraseStringLimitado(adicSubTemaList.getItemSelecionado().getTitulo(), 30) + "'?") == JOptionPane.OK_OPTION) {
                 subTemaController.excluir(adicSubTemaList.getItemSelecionado());
                 adicSubTemaList.removerItem(adicSubTemaList.getItemSelecionado());
+                estadoPadraoSubTema();
+                modoLeituraControleEdicaoTexto(true);
+                limparCamposControleEdicaoTexto();
+                visualisarControleEdicaoTexto(false);
+                estadoEdicaoTButton.setSelected(false);
+                salvarSubTemaButton.setEnabled(false);
+                ativarListenerEdicaoTexto(false);
+                isHouveAlteracaoEdicaoTexto = false;
             }
         } catch (Exception ex) {
             controladorDespacho.registraEexibe(ex);
@@ -657,14 +623,11 @@ public class MainFrame extends AbstractFrame {
 
     private void cancelSubTemaButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelSubTemaButtonActionPerformed
 
-       // if (OPER_SUBTEMA == OPER_ADIC_SUBTEMA) {
-            tituloSubTemaTField.setText(null);
-            editorPanel.setText(null);
-            estadoControleEdicaoTexto(false);
-            visualisarControleEdicaoTexto(false);
-            estadoPadraoSubTema();
-      //  }
-
+        limparCamposControleEdicaoTexto();
+        modoLeituraControleEdicaoTexto(true);
+        visualisarControleEdicaoTexto(false);
+        estadoPadraoSubTema();
+        estadoEdicaoTButton.setVisible(false);
 
     }//GEN-LAST:event_cancelSubTemaButtonActionPerformed
 
@@ -678,30 +641,35 @@ public class MainFrame extends AbstractFrame {
             if (OPER_SUBTEMA == OPER_ADIC_SUBTEMA) {
                 Bindings.analisarBean(subTema);
                 subTema = subTemaController.salvar(subTema);
-                //adiciono o tema na lista da janela principal
+                //A2.2 - operacao salvar
+                //1 - adicionar item na lista de subtemas
                 adicSubTemaList.adicionarItem(subTema);
+                //2 - selecionar o valor adicionado na lista
                 adicSubTemaList.getList().setSelectedValue(subTema, true);
-                //estadoControleEdicaoTexto(false);
-                estadoPadraoSubTema();
+                visualisarControleEdicaoTexto(true);
+                modoLeituraControleEdicaoTexto(true);
+                estadoExcSubTema();
+
+                estadoEdicaoTButton.setVisible(true);
                 JMessageUtil.showSucessMessage(this, "SubTema:'"
                         + StringHelper.getFraseStringLimitado(subTema.getTitulo(), 30) + "', inserido com sucesso!");
 
 
             } else {//senao altera o tema
-//                subTema = (SubTema) controladorDespacho.getParam(MainFrame.OBJ_SUBTEMA);
-//                Bindings.analisarBean(subTema);
-//                subTemaController.alterar(subTema);
-//                //altero o tema na lista da janela principal
-//                ListaComFiltro<SubTema> adicTemaList = (ListaComFiltro) controladorDespacho.getParam(MainFrame.COMP_ADIC_SUBTEMA_JLIST);
-//
-//                adicTemaList.alterarItem(subTema, adicTemaList.getList().getSelectedIndex());
-//
-//                JMessageUtil.showSucessMessage(this, "SubTema:'"
-//                        + StringHelper.getFraseStringLimitado(subTema.getTitulo(), 30) + "', alterado com sucesso!");
-//
-//                dispose();
-            }
+                subTema = adicSubTemaList.getItemSelecionado();
+                Bindings.analisarBean(subTema);
+                subTemaController.alterar(subTema);
 
+                adicSubTemaList.alterarItem(subTema, adicSubTemaList.getList().getSelectedIndex());
+                adicSubTemaList.getList().setSelectedValue(subTema, true);
+                modoLeituraControleEdicaoTexto(true);
+                JMessageUtil.showSucessMessage(this, "SubTema:'"
+                        + StringHelper.getFraseStringLimitado(subTema.getTitulo(), 30) + "', alterado com sucesso!");
+            }
+            isHouveAlteracaoEdicaoTexto = false;
+            ativarListenerEdicaoTexto(false);
+            estadoEdicaoTButton.setSelected(false);
+            salvarSubTemaButton.setEnabled(false);
             editorPanel.setRequestFocusEnabled(true);
         } catch (Exception ex) {
             this.controladorDespacho.registraEexibe(ex);
@@ -710,20 +678,48 @@ public class MainFrame extends AbstractFrame {
     }//GEN-LAST:event_salvarSubTemaButtonActionPerformed
 
     private void estadoEdicaoTButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_estadoEdicaoTButtonActionPerformed
-
-        
+        try {
+            OPER_SUBTEMA = OPER_ALT_SUBTEMA;
+            if (!estadoEdicaoTButton.isSelected() && isHouveAlteracaoEdicaoTexto) {
+                int opcao = confirmaAlteracao();
+                if (opcao == 0) {
+                    rollbackEdicaodeTexto();
+                    modoLeituraControleEdicaoTexto(true);
+                    salvarSubTemaButton.setEnabled(false);
+                    cancelSubTemaButton.setVisible(false);
+                    isHouveAlteracaoEdicaoTexto = false;
+                    ativarListenerEdicaoTexto(false);
+                    return;
+                } else {
+                    estadoEdicaoTButton.setSelected(true);
+                    return;
+                }
+            }
+            modoLeituraControleEdicaoTexto(!estadoEdicaoTButton.isSelected());
+            cancelSubTemaButton.setVisible(false);
+            salvarSubTemaButton.setEnabled(estadoEdicaoTButton.isSelected() && isHouveAlteracaoEdicaoTexto);
+            ativarListenerEdicaoTexto(estadoEdicaoTButton.isSelected());
+        } catch (Exception ex) {
+            controladorDespacho.registraEexibe(ex);
+        }
 
     }//GEN-LAST:event_estadoEdicaoTButtonActionPerformed
 
-    private void estadoEdicaoTButtonItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_estadoEdicaoTButtonItemStateChanged
+    private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
 
-        if (estadoEdicaoTButton.isSelected()) {
-            estadoControleEdicaoTexto(true);
-        }else{
-            estadoControleEdicaoTexto(false);
+        //TODO quando o usuario tentar sair avisar se caso ele alterou algum dado no formulario de edicao - 2
+        System.exit(0);
+
+    }//GEN-LAST:event_jMenuItem1ActionPerformed
+
+    private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
+
+        //TODO quando o usuario tentar sair avisar se caso ele alterou algum dado no formulario de edicao - 1
+        if (JMessageUtil.showConfirm("Deseja realmente sair?") == JOptionPane.OK_OPTION) {
+            System.exit(0);
         }
 
-    }//GEN-LAST:event_estadoEdicaoTButtonItemStateChanged
+    }//GEN-LAST:event_formWindowClosing
 
     /**
      * @param args the command line arguments
@@ -742,7 +738,6 @@ public class MainFrame extends AbstractFrame {
     private br.com.swing.componentes.personalizados.ui.ListaComFiltro<SubTema> adicSubTemaList;
     private javax.swing.JButton adicTemaButton;
     private br.com.swing.componentes.personalizados.ui.ListaComFiltro<Tema> adicTemaList;
-    private javax.swing.JButton altSubTemaButton;
     private javax.swing.JButton altTemaButton;
     private javax.swing.JButton cancelSubTemaButton;
     private javax.swing.JButton cancelTemaButton;
@@ -756,6 +751,7 @@ public class MainFrame extends AbstractFrame {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
+    private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel4;
@@ -768,4 +764,119 @@ public class MainFrame extends AbstractFrame {
     private javax.swing.JButton salvarSubTemaButton;
     private javax.swing.JTextField tituloSubTemaTField;
     // End of variables declaration//GEN-END:variables
+
+    private void visualisarControleEdicaoTexto(boolean b) {
+        editorSPane.setVisible(b);
+        controleEdicaoTextoPanel.setVisible(b);
+    }
+
+    private void popularDadosPainelEdicao() {
+        SubTema s = adicSubTemaList.getItemSelecionado();
+        if (s == null) {
+            return;
+        }
+        tituloSubTemaTField.setText(s.getTitulo());
+        editorPanel.setText(s.getDescricao());
+    }
+
+    private void popularSubTemaLista() {
+        try {
+            List<SubTema> subTemaList = subTemaController.consultaLista(new SubTema(adicTemaList.getItemSelecionado().getId()));
+            adicSubTemaList.removeAllItens();
+            adicSubTemaList.adicionarItens(subTemaList);
+        } catch (Exception ex) {
+            controladorDespacho.registraEexibe(ex);
+        }
+    }
+
+    //controle de estado do tema
+    public void estadoAdicTema() {
+        adicTemaButton.setEnabled(true);
+        altTemaButton.setEnabled(false);
+        excTemaButton.setEnabled(false);
+        cancelTemaButton.setEnabled(false);
+    }
+
+    public void estadoAltExclTema() {
+        adicTemaButton.setEnabled(false);
+        altTemaButton.setEnabled(true);
+        excTemaButton.setEnabled(true);
+        cancelTemaButton.setEnabled(true);
+    }
+
+    public void estadoExclTema() {
+        adicTemaButton.setEnabled(false);
+        altTemaButton.setEnabled(false);
+        excTemaButton.setEnabled(true);
+        cancelTemaButton.setEnabled(true);
+    }
+
+    //controle de estado do subtema
+    public void estadoPadraoSubTema() {
+        adicSubTemaButton.setEnabled(true);
+        excSubTemaButton.setEnabled(false);
+    }
+
+    public void estadoAdicSubTema() {
+        adicSubTemaButton.setEnabled(false);
+        excSubTemaButton.setEnabled(false);
+    }
+
+    public void estadoExcSubTema() {
+        adicSubTemaButton.setEnabled(true);
+        excSubTemaButton.setEnabled(true);
+    }
+
+    public void modoLeituraControleEdicaoTexto(boolean b) {
+        tituloSubTemaTField.setEditable(!b);
+        //salvarSubTemaButton.setEnabled(!b);
+        editorPanel.setEditable(!b);
+        cancelSubTemaButton.setVisible(!b);
+        editorPanel.setRequestFocusEnabled(!b);
+    }
+
+    private void limparCamposControleEdicaoTexto() {
+        tituloSubTemaTField.setText(null);
+        editorPanel.setText(null);
+    }
+
+    private void rollbackEdicaodeTexto() throws Exception {
+        SubTema subTema = subTemaController.consultaUnicoRetorno(adicSubTemaList.getItemSelecionado());
+        tituloSubTemaTField.setText(subTema.getTitulo());
+        editorPanel.setText(subTema.getDescricao());
+    }
+
+    //listener dos componentes: editorPane e tituloSubTemaTField.
+    private void ativarListenerEdicaoTexto(boolean b) {
+        if (b) {
+            editorPanel.getDocument().addDocumentListener(this);
+            tituloSubTemaTField.getDocument().addDocumentListener(this);
+        } else {
+            editorPanel.getDocument().removeDocumentListener(this);
+            tituloSubTemaTField.getDocument().removeDocumentListener(this);
+        }
+    }
+
+    @Override
+    public void insertUpdate(DocumentEvent e) {
+        isHouveAlteracaoEdicaoTexto = true;
+        salvarSubTemaButton.setEnabled(true);
+    }
+
+    @Override
+    public void removeUpdate(DocumentEvent e) {
+        isHouveAlteracaoEdicaoTexto = true;
+        salvarSubTemaButton.setEnabled(true);
+    }
+
+    @Override
+    public void changedUpdate(DocumentEvent e) {
+        isHouveAlteracaoEdicaoTexto = true;
+        salvarSubTemaButton.setEnabled(true);
+    }
+
+    private int confirmaAlteracao() {
+        return JMessageUtil.showOptionDialog(this, "Houve alteração no formulario de edição,"
+                + "você deseja realmente cancelar?", "Confirmação de Cancelamento alteração", "Não", new Object[]{"Sim", "Não"}, JMessageUtil.TIPO_IMG_PERGUNTA);
+    }
 }

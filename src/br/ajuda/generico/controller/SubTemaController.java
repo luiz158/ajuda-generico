@@ -71,8 +71,7 @@ public class SubTemaController extends AbstractController implements CrudControl
 
     @Override
     public SubTema excluir(SubTema subTema) throws Exception {
-        subTema.setIdTema(subTema.getTema().getId());
-        PreparedStatement psmt = subTemaDao.prepare("DELETE FROM " + managerAnnotationEntities.getNomeTabela(subTema) + " WHERE id_subtema=?");
+        PreparedStatement psmt = subTemaDao.prepare("DELETE FROM " + managerAnnotationEntities.getNomeTabela(subTema) + " WHERE id=?");
         psmt.setLong(1, subTema.getId());
         psmt.execute();
         subTemaDao.commit();
