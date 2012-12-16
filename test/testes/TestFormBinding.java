@@ -205,13 +205,13 @@ public class TestFormBinding extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-	TestPessoa p = new TestPessoa();
-        try {
-            Bindings.analisarBean(p);
-            System.out.println(p);
-        } catch (Exception ex) {
-            Logger.getLogger(TestFormBinding.class.getName()).log(Level.SEVERE, null, ex);
-        }
+//	TestPessoa p = new TestPessoa();
+//        try {
+//            Bindings.analisarBean(p);
+//            System.out.println(p);
+//        } catch (Exception ex) {
+//            Logger.getLogger(TestFormBinding.class.getName()).log(Level.SEVERE, null, ex);
+//        }
 
     }//GEN-LAST:event_jButton1ActionPerformed
 

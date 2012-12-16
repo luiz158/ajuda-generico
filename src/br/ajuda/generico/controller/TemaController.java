@@ -22,6 +22,8 @@ import br.ajuda.generico.util.AbstractController;
 import br.ajuda.generico.util.CrudController;
 import br.ajuda.generico.util.SqlUtil;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -39,13 +41,28 @@ public class TemaController extends AbstractController implements CrudController
 
     @Override
     public Tema salvar(Tema tema) throws Exception {
+        //TODO nao pode haver titulo de temas repetidos
+        tema.setDataInsercao(new Date(System.currentTimeMillis()));
+        tema.setDataAtualizacao(new Date(System.currentTimeMillis()));
         temaDao.savePrepare(tema);
+        PreparedStatement p = temaDao.getConnection().prepareStatement(
+                "SELECT * FROM "+managerAnnotationEntities.getNomeTabela(tema),
+                ResultSet.TYPE_SCROLL_INSENSITIVE,
+                ResultSet.CONCUR_READ_ONLY);
+
+        ResultSet rs = p.executeQuery();
+        rs.last();
+        tema = SqlUtil.converterResultSetParaBean(p, rs, Tema.class);
         temaDao.commit();
+        if(rs!=null){
+            rs.close();
+        }
         return tema;
     }
 
     @Override
     public Tema alterar(Tema tema) throws Exception {
+        tema.setDataAtualizacao(new Date(System.currentTimeMillis()));
         temaDao.updatePrepare(tema);
         temaDao.commit();
         return tema;
@@ -55,7 +72,7 @@ public class TemaController extends AbstractController implements CrudController
     public Tema excluir(Tema tema) throws Exception {
         PreparedStatement p = temaDao.prepare("DELETE FROM "
                 + managerAnnotationEntities.getNomeTabela(tema)
-                + " WHERE " + "id_tema=?");
+                + " WHERE " + "id=?");
         tema = temaDao.prepareQueryPorIdsReturnSingleBean(tema);
         p.setLong(1, tema.getId());
         p.execute();

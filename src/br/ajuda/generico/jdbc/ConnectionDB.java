@@ -4,6 +4,8 @@
  */
 package br.ajuda.generico.jdbc;
 
+import br.ajuda.generico.util.FileHelper;
+import br.ajuda.generico.util.SO;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -19,6 +21,7 @@ public class ConnectionDB {
     private static Connection connection;
     private final static String username = "SA";
     private final static String password = "";
+    private static String nomeBanco = "ajuda_generico";
     private final static String url = "jdbc:hsqldb:file:C:/BaseDeDados/ajuda-generico/ajuda_generico";
     private final static String driver = "org.hsqldb.jdbcDriver";
     private static final Logger log = Logger.getLogger(ConnectionDB.class.getName());
@@ -47,7 +50,7 @@ public class ConnectionDB {
                 //log.log(Level.INFO, "Setando application_name p/ 'AWJ' ...");
             } catch (SQLException sql) {
                 throw new Exception("Houve um erro na configuracao dos parametros\n "
-                        + "ou base de dados desligada\n ou base de dados esta sendo usando por outro programa:\n" + sql.getMessage());
+                        + "ou base de dados desligada\n ou base de dados esta sendo usado por outro programa:\n" + sql.getMessage());
             }
         }
     }
@@ -58,5 +61,11 @@ public class ConnectionDB {
             return connection;
         }
         return connection;
+    }
+
+    private static String getUrl() {
+        String appPath =FileHelper.getLocationAppPath();
+        return "jdbc:hsqldb:file:"+appPath+SO.getSepArqSO()+"bd"+SO.getSepArqSO()
+                + nomeBanco;
     }
 }

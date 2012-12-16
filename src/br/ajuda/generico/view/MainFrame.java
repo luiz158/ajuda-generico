@@ -53,12 +53,13 @@ public class MainFrame extends AbstractFrame implements DocumentListener {
     public static final String COMP_ADIC_SUBTEMA_JLIST = "adicSubTemaList";
     private TemaController temaController;
     private SubTemaController subTemaController;
-    private ListSupport adicTemaLSupport;
+    private Bindings bindings;
     private boolean isHouveAlteracaoEdicaoTexto = false;
 
     /** Creates new form MainFrame */
     public MainFrame() {
         initComponents();
+        bindings = new Bindings();
         adicTemaList.getList().setName("tema");
         //LISTENERS
         adicTemaList.addListSelectionListener(new ListSelectionListener() {
@@ -78,12 +79,18 @@ public class MainFrame extends AbstractFrame implements DocumentListener {
 
             @Override
             public void mouseClicked(MouseEvent e) {
-                popularSubTemaLista();
-                adicSubTemaButton.setEnabled(true);
+                if (!adicTemaList.getList().isSelectionEmpty()) {
+                    popularSubTemaLista();
+                    adicSubTemaButton.setEnabled(true);
+                }
             }
 
             @Override
             public void mousePressed(MouseEvent e) {
+                if (!adicTemaList.getList().isSelectionEmpty()) {
+                    popularSubTemaLista();
+                    adicSubTemaButton.setEnabled(true);
+                }
             }
 
             @Override
@@ -218,9 +225,9 @@ public class MainFrame extends AbstractFrame implements DocumentListener {
         visualisarControleEdicaoTexto(false);
         estadoEdicaoTButton.setVisible(false);
         //BINDINGS
-        Bindings.adicLigacao(tituloSubTemaTField, "text", null, String.class);
-        Bindings.adicLigacao(editorPanel, "text", null, String.class);
-        Bindings.adicLigacao(adicTemaList.getList(), "selectedValue", null, Tema.class);
+        bindings.adicLigacao(tituloSubTemaTField, "text", null, String.class);
+        bindings.adicLigacao(editorPanel, "text", null, String.class);
+        bindings.adicLigacao(adicTemaList.getList(), "selectedValue", null, Tema.class);
 
     }
 
@@ -628,6 +635,8 @@ public class MainFrame extends AbstractFrame implements DocumentListener {
         visualisarControleEdicaoTexto(false);
         estadoPadraoSubTema();
         estadoEdicaoTButton.setVisible(false);
+        ativarListenerEdicaoTexto(false);
+        isHouveAlteracaoEdicaoTexto = false;
 
     }//GEN-LAST:event_cancelSubTemaButtonActionPerformed
 
@@ -639,7 +648,7 @@ public class MainFrame extends AbstractFrame implements DocumentListener {
 
             //se a operacao for adicionar o tema
             if (OPER_SUBTEMA == OPER_ADIC_SUBTEMA) {
-                Bindings.analisarBean(subTema);
+                bindings.analisarBean(subTema);
                 subTema = subTemaController.salvar(subTema);
                 //A2.2 - operacao salvar
                 //1 - adicionar item na lista de subtemas
@@ -657,7 +666,7 @@ public class MainFrame extends AbstractFrame implements DocumentListener {
 
             } else {//senao altera o tema
                 subTema = adicSubTemaList.getItemSelecionado();
-                Bindings.analisarBean(subTema);
+                bindings.analisarBean(subTema);
                 subTemaController.alterar(subTema);
 
                 adicSubTemaList.alterarItem(subTema, adicSubTemaList.getList().getSelectedIndex());
@@ -781,6 +790,9 @@ public class MainFrame extends AbstractFrame implements DocumentListener {
 
     private void popularSubTemaLista() {
         try {
+            if (adicTemaList.getList().isSelectionEmpty()) {
+                return;
+            }
             List<SubTema> subTemaList = subTemaController.consultaLista(new SubTema(adicTemaList.getItemSelecionado().getId()));
             adicSubTemaList.removeAllItens();
             adicSubTemaList.adicionarItens(subTemaList);

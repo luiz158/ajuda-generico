@@ -511,6 +511,7 @@ public class HsqldbDaoFactory<T> implements GenericDao<T> {
         if (getConnection() != null) {
             try {
                 getConnection().commit();
+                disconnection();
                 log.log(Level.INFO, "Executando commit...");
             } catch (Exception ex) {
                 log.log(Level.SEVERE, "Executando rollback...", ex);

@@ -37,14 +37,15 @@ import br.com.swing.componentes.personalizados.ui.ListaComFiltro;
 public class TemaDialog extends AbstractDialog {
 
     private TemaController temaController;
+    private Bindings bindings;
 
     /** Creates new form TemaDialog */
     public TemaDialog(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
-
-        Bindings.adicLigacao(tituloTField, "text", null, String.class);
-        Bindings.adicLigacao(descTArea, "text", null, String.class);
+        bindings = new Bindings();
+        bindings.adicLigacao(tituloTField, "text", null, String.class);
+        bindings.adicLigacao(descTArea, "text", null, String.class);
     }
 
     /** This method is called from within the constructor to
@@ -178,7 +179,7 @@ public class TemaDialog extends AbstractDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void salvarButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_salvarButtonActionPerformed
-
+        
         try {
 
             Tema tema = new Tema();
@@ -187,16 +188,16 @@ public class TemaDialog extends AbstractDialog {
 
             //se a operacao for adicionar o tema
             if (operacao == MainFrame.OPER_ADIC_TEMA) {
-                Bindings.analisarBean(tema);
-                temaController.salvar(tema);
+                bindings.analisarBean(tema);
+                tema = temaController.salvar(tema);
                 //adiciono o tema na lista da janela principal
                 ((ListaComFiltro<Tema>) controladorDespacho.getParam(MainFrame.COMP_ADIC_TEMA_JLIST)).adicionarItem(tema);
                 JMessageUtil.showSucessMessage(this, "Tema:'"
                         + StringHelper.getFraseStringLimitado(tema.getTitulo(), 30) + "', inserido com sucesso!");
-                Bindings.limpar(Tema.class);
+                limparCampos();
             } else {//senao altera o tema
                 tema = (Tema) controladorDespacho.getParam(MainFrame.OBJ_TEMA);
-                Bindings.analisarBean(tema);
+                bindings.analisarBean(tema);
                 temaController.alterar(tema);
                 //altero o tema na lista da janela principal
                 ListaComFiltro<Tema> adicTemaList = (ListaComFiltro) controladorDespacho.getParam(MainFrame.COMP_ADIC_TEMA_JLIST);
@@ -289,4 +290,9 @@ public class TemaDialog extends AbstractDialog {
     private javax.swing.JButton salvarButton;
     private javax.swing.JTextField tituloTField;
     // End of variables declaration//GEN-END:variables
+
+    private void limparCampos() {
+        tituloTField.setText(null);
+        descTArea.setText(null);
+    }
 }

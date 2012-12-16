@@ -29,6 +29,7 @@ public class LogSis {
                     + "build"
                     + SO.getSepArqSO()
                     + "classes";
+             
             //String appPath =FileHelper.getLocationAppPath();
             System.out.println(appPath);
             File arq = new File(appPath + SO.getSepArqSO() + "sis.log");

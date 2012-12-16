@@ -45,9 +45,10 @@ import java.util.logging.Logger;
 public class Bindings {
 
     private static final Logger log = Logger.getLogger(Bindings.class.getName());
-    static List<BeanComposicaoBinding> beansBindings;
+    private List<BeanComposicaoBinding> beansBindings;
 
-    static {
+
+    public Bindings() {
         beansBindings = Collections.synchronizedList(new ArrayList<BeanComposicaoBinding>());
     }
 
@@ -59,7 +60,7 @@ public class Bindings {
      * @param valorDefault valor default original do componente
      * @param tipoClasseComp tipo da classe requerida para conversão do valor do componente.
      */
-    public static <C> void adicLigacao(C componente, String nomeMetodo, Object valorDefault, Class<?> tipoClasseComp) {
+    public <C> void adicLigacao(C componente, String nomeMetodo, Object valorDefault, Class<?> tipoClasseComp) {
         aL(componente, nomeMetodo, valorDefault, tipoClasseComp, null);
     }
 
@@ -72,11 +73,11 @@ public class Bindings {
      * @param tipoClasseComp tipo da classe requerida para conversão do valor do componente.
      * @param conversorComponente personalisar o conversor
      */
-    public static <C> void adicLigacao(C componente, String nomeMetodo, Object valorDefault, Class<?> tipoClasseComp, ConversorComponente conversorComponente) {
+    public <C> void adicLigacao(C componente, String nomeMetodo, Object valorDefault, Class<?> tipoClasseComp, ConversorComponente conversorComponente) {
         aL(componente, nomeMetodo, valorDefault, tipoClasseComp, conversorComponente);
     }
 
-    private static <C> void aL(C componente, String nomeMetodo, Object valorDefault, Class<?> tipoClasseComp, ConversorComponente conversorComponente) {
+    private <C> void aL(C componente, String nomeMetodo, Object valorDefault, Class<?> tipoClasseComp, ConversorComponente conversorComponente) {
         beansBindings.add(new BeanComposicaoBinding(componente, nomeMetodo, tipoClasseComp, valorDefault, conversorComponente));
     }
 
@@ -87,9 +88,9 @@ public class Bindings {
      * @param bean objeto bean a ser analisado
      * @throws Exception se houver algum erro durante a analise do bean,exemplo: erro de conversao,erro de formato campo,se o bean estiver nulo etc.
      */
-    public static <T, C> void analisarBean(T bean) throws Exception {
-        //TODO realizar testes no demais tipos, foram testados:string,date.Testar tambem os conversores
-        //TODO criar um exeception que agrupe todas os erros ocorridos nos campos para exibir na tela de uma vez so
+    public <T, C> void analisarBean(T bean) throws Exception {
+        //TODO realizar testes no demais tipos, foram testados:string,date.Testar tambem os conversores(corrigido)
+        //TODO criar um exception que agrupe todas os erros ocorridos nos campos para exibir na tela de uma vez so
         //TODO BUG : preenchimento em branco do componente voltar nulo pro bean(corrigido)
         //TODO criar um arquivo properties contendo as mensagens customizadas dos conversores
         //verifico se bean esta nulo
@@ -262,7 +263,8 @@ public class Bindings {
      * @param <C> tipo generico do componente
      * @param classe
      */
-    public static <C> void limpar(Class classe) {
+    public <C> void limpar(Class classe) {
+        //TODO Bindings.limpar nao esta funcionando
         Field[] campos = BeanHelper.getAllFields(classe);;
         for (Field campo : campos) {
             campo.setAccessible(true);

@@ -25,6 +25,7 @@ import br.ajuda.generico.util.CrudController;
 import br.ajuda.generico.util.SqlUtil;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -44,7 +45,10 @@ public class SubTemaController extends AbstractController implements CrudControl
 
     @Override
     public SubTema salvar(SubTema subTema) throws Exception {
+        //TODO nao pode haver titulo de subtemas repetidos
         subTema.setIdTema(subTema.getTema().getId());
+        subTema.setDataInsercao(new Date(System.currentTimeMillis()));
+        subTema.setDataAtualizacao(new Date(System.currentTimeMillis()));
         subTemaDao.savePrepare(subTema);
         PreparedStatement p = subTemaDao.getConnection().prepareStatement(
                 "SELECT * FROM "+managerAnnotationEntities.getNomeTabela(subTema),
@@ -63,7 +67,8 @@ public class SubTemaController extends AbstractController implements CrudControl
 
     @Override
     public SubTema alterar(SubTema subTema) throws Exception {
-        subTema.setIdTema(subTema.getTema().getId());
+        subTema.setIdTema(subTema.getTema().getId());        
+        subTema.setDataAtualizacao(new Date(System.currentTimeMillis()));
         subTemaDao.updatePrepare(subTema);
         subTemaDao.commit();
         return subTema;
